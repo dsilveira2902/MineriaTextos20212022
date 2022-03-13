@@ -11,13 +11,20 @@ de la Universidad de Stanford.
     * Laura García Castañeda
     * Diego Silveira Madrid
 
------------------------ CAMBIARRRRRR -----------------------
-Este módulo construye los archivos `words.txt`, `tags.txt` y `dataset_params.json` a partir
-del contenido del conjunto de datos del directorio `data/`.
+Este módulo contiene una serie de clases y funciones que se utilizarán como *helpers* a lo largo del proyecto.
 
-    * El archivo `words.txt` contiene las palabras extraídas de forma única del conjunto de datos
-    * El archivo `tags.txt` contiene las etiquetas sintácticas extraídas de forma única del conjunto de datos
-    * El archivo `dataset_params.json` contiene los parámetros del conjunto de datos
+    * La clase `Params` se utilizará para guardar y poder acceder a las propiedades del dataset con el que se
+    está trabajando.
+    * La clase `runningAverage` se utilizará para mantener actualizada la media de un valor.
+    * La función `set_logger()` se utilizará para configurar los mensajes que aparecerán en el *log*.
+    * La función `save_dict_to_json()` se utilizará para guardar la información de una determinada variable
+    tipo diccionario en un archivo JSON.
+    * La función `save_checkpoint()` se utilizará para guardar en un archivo la situación de un modelo en
+    determinadas iteraciones del entrenamiento y, además, guardar en otro archivo la que mejores resultados
+    proporciona.
+    * La función `load_checkpoint()` se utiliza para cargar la información de un modelo guardado previamente
+    en un archivo.
+    
 """
 import json
 import logging
@@ -114,6 +121,7 @@ class RunningAverage():
         """
         return self.total / float(self.steps)
 
+
 # === Función `set_logger` ===
 def set_logger(log_path):
     """
@@ -148,6 +156,8 @@ def save_dict_to_json(d, json_path):
             * `json_path`: (`str`) ruta del archivo JSON en el que se guardan los parámetros
     """
     with open(json_path, 'w') as f:
+        # Iteramos por cada uno de los elementos del diccionario para convertirlos a *float*
+        # Ya que JSON no soporta las variables de *numpy*
         d = {k: float(v) for k, v in d.items()}
         json.dump(d, f, indent=4)
 
@@ -155,10 +165,18 @@ def save_dict_to_json(d, json_path):
 # === Función `save_checkpoint` ===
 def save_checkpoint(state, is_best, checkpoint):
     """
+        Esta función guarda los parámetros del modelo en un determinado momento del entrenamiento. Además, si este
+        es el mejor modelo encontrado hasta el momento lo guarda en una dirección adicional.
 
-    :param state:
-    :param is_best:
-    :param checkpoint:
+        Parámetros:
+            * `state`: (`dict`) contiene el parámetro `state_dict` del modelo, el cuál contiene toda la información
+            necesaria para replicar el modelo.
+            * `ìs_best`: (`bool`) variable que indica si este modelo es el mejor encontrado hasta el momento.
+            * `checkpoint`: (`str`) directorio en el que se guardará la información del checkpoint.
+    """
+
+    """
+        Si todavía no existe el directorio en el que se guardan los checkpoints, se crea.
     """
     filepath = os.path.join(checkpoint, 'last.pth.tar')
     if not os.path.exists(checkpoint):
@@ -166,19 +184,42 @@ def save_checkpoint(state, is_best, checkpoint):
         os.mkdir(checkpoint)
     else:
         print("Checkpoint Directory exists! ")
+
+    # Guarda el modelo encontrado en el directorio indicado.
     torch.save(state, filepath)
+
+    """
+        Si el modelo es el mejor que se ha encontrado hasta el momento, el modelo es guardado también en el directorio
+        reservado para el mejor modelo.
+    """
     if is_best:
         shutil.copyfile(filepath, os.path.join(checkpoint, 'best.pth.tar'))
 
 
 # === Función `load_checkpoint` ===
 def load_checkpoint(checkpoint, model, optimizer=None):
-   
+    """
+        Esta función utiliza la información guardada de un modelo en un determinado momento para cargarla de nuevo y
+        poder trabajar con ella al instante sin necesidad de realizar un nuevo entrenamiento.
+
+        Parámetros:
+            * `checkpoint`: (`str`) directorio en el se encuentra guardada la información del modelo
+            * `model`: (`torch.nn.Module`) modelo en el que vamos a cargar los datos guardados en el checkpoint.
+            Este debe tener la misma estructura que el que se utilizó para guardar el modelo.
+            * `optimizer`: (`torch.optim`) estructura donde se guardará el optimizador que utliza el modelo en caso de
+            que este fuera guardado en el checkpoint del modelo.
+    """
+
+    # Se busca el archivo a cargar.
     if not os.path.exists(checkpoint):
         raise ("File doesn't exist {}".format(checkpoint))
+
+    # Se carga el modelo a modo de diccionario
     checkpoint = torch.load(checkpoint)
+    # Se crea el modelo a partir de la información del diccionario
     model.load_state_dict(checkpoint['state_dict'])
 
+    # En el caso de que se haya guardado el optimizador, este también es cargado.
     if optimizer:
         optimizer.load_state_dict(checkpoint['optim_dict'])
 
