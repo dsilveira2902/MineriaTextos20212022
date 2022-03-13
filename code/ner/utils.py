@@ -107,8 +107,11 @@ class RunningAverage():
         self.total += val
         self.steps += 1
 
-    # === Método `update` ===
+    # === Método `__call__` ===
     def __call__(self):
+        """
+            Este método actualiza calcula el valor medio a partir de las propiedades `total`y `steps`
+        """
         return self.total / float(self.steps)
 
 # === Función `set_logger` ===
@@ -149,8 +152,14 @@ def save_dict_to_json(d, json_path):
         json.dump(d, f, indent=4)
 
 
+# === Función `save_checkpoint` ===
 def save_checkpoint(state, is_best, checkpoint):
-    
+    """
+
+    :param state:
+    :param is_best:
+    :param checkpoint:
+    """
     filepath = os.path.join(checkpoint, 'last.pth.tar')
     if not os.path.exists(checkpoint):
         print("Checkpoint Directory does not exist! Making directory {}".format(checkpoint))
@@ -162,6 +171,7 @@ def save_checkpoint(state, is_best, checkpoint):
         shutil.copyfile(filepath, os.path.join(checkpoint, 'best.pth.tar'))
 
 
+# === Función `load_checkpoint` ===
 def load_checkpoint(checkpoint, model, optimizer=None):
    
     if not os.path.exists(checkpoint):
