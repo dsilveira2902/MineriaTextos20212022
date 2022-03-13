@@ -8,15 +8,16 @@ basa en el código del curso [CS230](https://github.com/cs230-stanford/cs230-cod
 de la Universidad de Stanford.
 
 **Autores de los comentarios:**
+
     * Laura García Castañeda
     * Diego Silveira Madrid
 
 Este módulo construye los archivos `words.txt`, `tags.txt` y `dataset_params.json` a partir
 del contenido del conjunto de datos del directorio `data/`.
 
-    * El archivo `words.txt` contiene las palabras extraídas de forma única del conjunto de datos
-    * El archivo `tags.txt` contiene las etiquetas sintácticas extraídas de forma única del conjunto de datos
-    * El archivo `dataset_params.json` contiene los parámetros del conjunto de datos
+- El archivo `words.txt` contiene las palabras extraídas de forma única del conjunto de datos
+- El archivo `tags.txt` contiene las etiquetas sintácticas extraídas de forma única del conjunto de datos
+- El archivo `dataset_params.json` contiene los parámetros del conjunto de datos
 """
 import argparse
 from collections import Counter
@@ -28,10 +29,10 @@ parser.add_argument('--min_count_word', default=1, help="Minimum count for words
 parser.add_argument('--min_count_tag', default=1, help="Minimum count for tags in the dataset", type=int)
 parser.add_argument('--data_dir', default='data/small', help="Directory containing the dataset")
 
-
-PAD_WORD = '<pad>'
-PAD_TAG = 'O'
-UNK_WORD = 'UNK'
+# Palabras especiales
+PAD_WORD = '<pad>'  # Si una frase tiene 5 palabras y otra 3, la de 3 se rellenará con un pad delante y otro detrás para alcanzar el máximo de 5.
+PAD_TAG = 'O'  # Para identificar que para esa palabra no tenemos una etiqueta
+UNK_WORD = 'UNK'  # Permite representar una palabra desconocida, esta palabra se trata como cualquier otra palabra, pero tiene su propio embedding en la matriz de embeddings.
 
 
 # === Función `save_vocab_to_txt_file` ===
@@ -61,7 +62,7 @@ def save_dict_to_json(d, json_path):
     """
     with open(json_path, 'w') as f:
         d = {k: v for k, v in d.items()}
-        json.dump(d, f, indent=4)
+        json.dump(d, f, indent=4) # Lo convierte en formato JSON
 
 
 # === Función `update_vocab` ===
@@ -72,10 +73,12 @@ def update_vocab(txt_path, vocab):
         devuelve el número total de líneas del archivo txt
 
     Parámetros:
+
         * `txt_path`: (`str`) ruta del archivo del que se obtiene el contenido a procesar, con una frase por línea
         * `vocab`: (`Counter`) estructura que registra el número de apariciones de cada elemento
 
     Return:
+
         * `i`: (`int`) número de líneas del archivo
     """
     with open(txt_path) as f:

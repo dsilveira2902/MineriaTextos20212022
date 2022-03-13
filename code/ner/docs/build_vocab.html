@@ -23,9 +23,11 @@
 extracción de entidades</a>&rdquo; y se 
 basa en el código del curso <a href="https://github.com/cs230-stanford/cs230-code-examples">CS230</a> 
 de la Universidad de Stanford.</p>
-<p><strong>Autores de los comentarios:</strong>
-   * Laura García Castañeda
-   * Diego Silveira Madrid</p>
+<p><strong>Autores de los comentarios:</strong></p>
+<ul>
+<li>Laura García Castañeda</li>
+<li>Diego Silveira Madrid</li>
+</ul>
 <p>Este módulo construye los archivos <code>words.txt</code>, <code>tags.txt</code> y <code>dataset_params.json</code> a partir
 del contenido del conjunto de datos del directorio <code>data/</code>.</p>
 <ul>
@@ -43,12 +45,7 @@ del contenido del conjunto de datos del directorio <code>data/</code>.</p>
 <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
 <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--min_count_word&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Minimum count for words in the dataset&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--min_count_tag&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Minimum count for tags in the dataset&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--data_dir&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;data/small&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory containing the dataset&quot;</span><span class="p">)</span>
-
-
-<span class="n">PAD_WORD</span> <span class="o">=</span> <span class="s1">&#39;&lt;pad&gt;&#39;</span>
-<span class="n">PAD_TAG</span> <span class="o">=</span> <span class="s1">&#39;O&#39;</span>
-<span class="n">UNK_WORD</span> <span class="o">=</span> <span class="s1">&#39;UNK&#39;</span></pre></div>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--data_dir&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;data/small&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory containing the dataset&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -57,10 +54,12 @@ del contenido del conjunto de datos del directorio <code>data/</code>.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-1'>#</a>
       </div>
-      <h3><span id="función-<code>save_vocab_to_txt_file</code>" href="función-<code>save_vocab_to_txt_file</code>"> Función <code>save_vocab_to_txt_file</code> </span></h3>
+      <p>Palabras especiales</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">save_vocab_to_txt_file</span><span class="p">(</span><span class="n">vocab</span><span class="p">,</span> <span class="n">txt_path</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre><span class="n">PAD_WORD</span> <span class="o">=</span> <span class="s1">&#39;&lt;pad&gt;&#39;</span>  <span class="c1"># Si una frase tiene 5 palabras y otra 3, la de 3 se rellenará con un pad delante y otro detrás para alcanzar el máximo de 5.</span>
+<span class="n">PAD_TAG</span> <span class="o">=</span> <span class="s1">&#39;O&#39;</span>  <span class="c1"># Para identificar que para esa palabra no tenemos una etiqueta</span>
+<span class="n">UNK_WORD</span> <span class="o">=</span> <span class="s1">&#39;UNK&#39;</span>  <span class="c1"># Permite representar una palabra desconocida, esta palabra se trata como cualquier otra palabra, pero tiene su propio embedding en la matriz de embeddings.</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -68,6 +67,18 @@ del contenido del conjunto de datos del directorio <code>data/</code>.</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <h3><span id="función-<code>save_vocab_to_txt_file</code>" href="función-<code>save_vocab_to_txt_file</code>"> Función <code>save_vocab_to_txt_file</code> </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">save_vocab_to_txt_file</span><span class="p">(</span><span class="n">vocab</span><span class="p">,</span> <span class="n">txt_path</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
       </div>
       <p>Esta función recorre una lista de palabras extraídas del texto
    de entrenamiento y las escribe cada una en una nueva línea de
@@ -83,10 +94,10 @@ del contenido del conjunto de datos del directorio <code>data/</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-3'>
+  <div class='section' id='section-4'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-3'>#</a>
+        <a class='octothorpe' href='#section-4'>#</a>
       </div>
       <h3><span id="función-<code>save_dict_to_json</code>" href="función-<code>save_dict_to_json</code>"> Función <code>save_dict_to_json</code> </span></h3>
     </div>
@@ -95,10 +106,10 @@ del contenido del conjunto de datos del directorio <code>data/</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-4'>
+  <div class='section' id='section-5'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-4'>#</a>
+        <a class='octothorpe' href='#section-5'>#</a>
       </div>
       <p>Esta función guarda la información contenida en un diccionario en un archivo JSON</p>
 <p>Parámetros:
@@ -108,14 +119,14 @@ del contenido del conjunto de datos del directorio <code>data/</code>.</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></pre></div>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># Lo convierte en formato JSON</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-5'>
+  <div class='section' id='section-6'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-5'>#</a>
+        <a class='octothorpe' href='#section-6'>#</a>
       </div>
       <h3><span id="función-<code>update_vocab</code>" href="función-<code>update_vocab</code>"> Función <code>update_vocab</code> </span></h3>
     </div>
@@ -124,10 +135,10 @@ del contenido del conjunto de datos del directorio <code>data/</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-6'>
+  <div class='section' id='section-7'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
+        <a class='octothorpe' href='#section-7'>#</a>
       </div>
       <p>Esta función actualiza el contenido de la estructura de tipo <code>Counter</code>
    con el número de apariciones de cada elemento dentro del archivo y
@@ -138,8 +149,10 @@ del contenido del conjunto de datos del directorio <code>data/</code>.</p>
 <li><code>txt_path</code>: (<code>str</code>) ruta del archivo del que se obtiene el contenido a procesar, con una frase por línea</li>
 <li>
 <p><code>vocab</code>: (<code>Counter</code>) estructura que registra el número de apariciones de cada elemento</p>
-<p>Return:
-   * <code>i</code>: (<code>int</code>) número de líneas del archivo</p>
+<p>Return:</p>
+</li>
+<li>
+<p><code>i</code>: (<code>int</code>) número de líneas del archivo</p>
 </li>
 </ul>
     </div>
@@ -148,10 +161,10 @@ del contenido del conjunto de datos del directorio <code>data/</code>.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-8'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       <p>La función <code>enumerate()</code> genera un diccionario con num_linea-1 como clave
 y el contenido de la línea como valor</p>
