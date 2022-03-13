@@ -24,7 +24,7 @@ Este módulo contiene una serie de clases y funciones que se utilizarán como *h
     proporciona.
     * La función `load_checkpoint()` se utiliza para cargar la información de un modelo guardado previamente
     en un archivo.
-    
+
 """
 import json
 import logging
