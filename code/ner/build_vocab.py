@@ -23,14 +23,29 @@ from collections import Counter
 import json
 import os
 
+
+"""
+    Definimos los argumentos que recibirá nuestro archivo por línea de comandos.
+"""
+# Creamos el objeto que maneja los argumentos gracias a la librería *argparse*
 parser = argparse.ArgumentParser()
+# Parámetro para definir el número mínimo de veces que debe aparecer cada palabra el dataset. Por defecto será 1.
 parser.add_argument('--min_count_word', default=1, help="Minimum count for words in the dataset", type=int)
+# Parámetro para definir el número mínimo de veces que debe aparecer cada etiqueta el dataset. Por defecto será 1.
 parser.add_argument('--min_count_tag', default=1, help="Minimum count for tags in the dataset", type=int)
+# Parámetro para definir el directorio que contiene el dataset. Por defecto será *data/small*.
 parser.add_argument('--data_dir', default='data/small', help="Directory containing the dataset")
 
 
+"""
+    Distintas variables globales que se utilizarán para completar 
+    los distintos archivos de vocabulario.
+"""
+# Palabra que se utilizará como *padding*
 PAD_WORD = '<pad>'
+# Etiqueta que se utilizará para las palabras de *padding*
 PAD_TAG = 'O'
+# Palabra que se utilizará para identificar las palabras desconocidas.
 UNK_WORD = 'UNK'
 
 
@@ -42,7 +57,7 @@ def save_vocab_to_txt_file(vocab, txt_path):
         un archivo txt.
 
         Parámetros:
-            * `vocab`: (`list`) vocabulario **de** palabras extraídas del texto de entrenamiento
+            * `vocab`: (`list`) vocabulario de palabras extraídas del texto de entrenamiento
             * `txt_path`: (`str`) ruta del archivo en el que se guardan las palabras del vocabulario
     """
     with open(txt_path, "w") as f:
@@ -87,36 +102,62 @@ def update_vocab(txt_path, vocab):
     return i + 1
 
 
+# === Ejecución principal del archivo ===
 if __name__ == '__main__':
 
+    # Argumentos de entrada
     args = parser.parse_args()
 
     print("Building word vocabulary...")
+    # Se crea un contador de palabras vacío para el vocabulario
     words = Counter()
+    # Se añaden las palabras al contador.
+    # Además se guarda en una variable el número de palabras de cada archivo consultado.
     size_train_sentences = update_vocab(os.path.join(args.data_dir, 'train/sentences.txt'), words)
     size_dev_sentences = update_vocab(os.path.join(args.data_dir, 'val/sentences.txt'), words)
     size_test_sentences = update_vocab(os.path.join(args.data_dir, 'test/sentences.txt'), words)
     print("- done.")
 
     print("Building tag vocabulary...")
+    # Se crea un contador de etiquetas vacío para el vocabulario
     tags = Counter()
+    # Se añaden las etiquetas al contador.
+    # Además se guarda en una variable el número de etiquetas de cada archivo consultado.
     size_train_tags = update_vocab(os.path.join(args.data_dir, 'train/labels.txt'), tags)
     size_dev_tags = update_vocab(os.path.join(args.data_dir, 'val/labels.txt'), tags)
     size_test_tags = update_vocab(os.path.join(args.data_dir, 'test/labels.txt'), tags)
     print("- done.")
 
+    """
+        Se comprueba que el número de palabras y de etiquetas que contiene el vocabulario
+        es el mismo. Lo que significa que es correcto.
+    """
     assert size_train_sentences == size_train_tags
     assert size_dev_sentences == size_dev_tags
     assert size_test_sentences == size_test_tags
 
+    """
+        Se crea una compresión de los contadores de palabras y etiqueta. De manera que al
+        iterar a lo largo de cada uno de los contadores, solo se mantendrán en la lista 
+        aquellos elementos que aparezcan un número mínimo de veces en el vocabulario. (El
+        número mínimo de veces vendrá definido por los argumentos).
+    """
     words = [tok for tok, count in words.items() if count >= args.min_count_word]
     tags = [tok for tok, count in tags.items() if count >= args.min_count_tag]
 
+    """ 
+        Se añaden a la lista de palabras y de etiquetas la palabra y la etiqueta correspondiente
+        al *padding*
+    """
     if PAD_WORD not in words: words.append(PAD_WORD)
     if PAD_TAG not in tags: tags.append(PAD_TAG)
-    
+
+    # Se añade a la lista de palabras la palabra para palabras desconocidas.
     words.append(UNK_WORD)
 
+    """
+        Se guardan los contadores creados en dos archivos de texto diferentes.
+    """
     print("Saving vocabularies to file...")
     save_vocab_to_txt_file(words, os.path.join(args.data_dir, 'words.txt'))
     save_vocab_to_txt_file(tags, os.path.join(args.data_dir, 'tags.txt'))
@@ -132,7 +173,14 @@ if __name__ == '__main__':
         'pad_tag': PAD_TAG,
         'unk_word': UNK_WORD
     }
+
+    """
+        Se guardan las propiedades del dataset en un archivo JSON
+    """
     save_dict_to_json(sizes, os.path.join(args.data_dir, 'dataset_params.json'))
 
+    """
+        Se muestran por consola las propiedades del dataset
+    """
     to_print = "\n".join("- {}: {}".format(k, v) for k, v in sizes.items())
     print("Characteristics of the dataset:\n{}".format(to_print))
