@@ -72,6 +72,10 @@ class DataLoader(object):
         return data
 
     def data_iterator(self, data, params, shuffle=False):
+        """
+            Returns a generator that yields batches data with labels. Batch size is params.batch_size. Expires after one
+            pass over the data.
+        """
         
         order = list(range(data['size']))
         if shuffle:
@@ -82,21 +86,36 @@ class DataLoader(object):
             batch_sentences = [data['data'][idx] for idx in order[i*params.batch_size:(i+1)*params.batch_size]]
             batch_tags = [data['labels'][idx] for idx in order[i*params.batch_size:(i+1)*params.batch_size]]
 
+            # Obtiene la longitud máxima de una frase, que condiciona la longitud máxima de entrada
             batch_max_len = max([len(s) for s in batch_sentences])
 
+            # Rellena la matriz con todas las frases y añade PADs en los huecos
+            # Para esto, creamos una matriz de 1s con el tamaño del minibatch
+            # y lo multiplicamos por un 0 o un 1 (el profesor no se acuerda, el valor que tuviera)
             batch_data = self.pad_ind*np.ones((len(batch_sentences), batch_max_len))
+
+            # Creamos una matriz de 1s y ponemos -1 donde no hay etiquetas
             batch_labels = -1*np.ones((len(batch_sentences), batch_max_len))
 
+            # Para cada una de las frases, tenemos una lista de listas, y lo que hacemos
+            # es rellenar para cada caso
             for j in range(len(batch_sentences)):
                 cur_len = len(batch_sentences[j])
                 batch_data[j][:cur_len] = batch_sentences[j]
                 batch_labels[j][:cur_len] = batch_tags[j]
 
+            # Mediante .LongTensor() convierte las listas de listas anteriores en tensores
+            # Al ser una lista de listas, el tensor será de dimensión 2
             batch_data, batch_labels = torch.LongTensor(batch_data), torch.LongTensor(batch_labels)
 
             if params.cuda:
+                # Metemos los tensores en la GPU mediante .cuda()
                 batch_data, batch_labels = batch_data.cuda(), batch_labels.cuda()
 
             batch_data, batch_labels = Variable(batch_data), Variable(batch_labels)
-    
+
+            # Obtiene 100 datos y 100 etiquetas y las devuelve
+            # La siguiente vez que se ejecute vuelve a ejecutar el bucle con los siguientes 100 datos y
+            # las siguientes 100 etiquetas
+            # Esto produce un "loncheo" de los datos
             yield batch_data, batch_labels
