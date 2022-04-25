@@ -8,6 +8,7 @@ basa en el código del curso [CS230](https://github.com/cs230-stanford/cs230-cod
 de la Universidad de Stanford.
 
 **Autores de los comentarios:**
+
     * Laura García Castañeda
     * Diego Silveira Madrid
 
@@ -22,6 +23,7 @@ En este módulo se define el modelo de la red neuronal, su función de pérdida 
  * La función de precisión calcula la proporción de predicciones correctas del modelo.
 """
 
+# === Importar las librerías ===
 import numpy as np
 import torch
 import torch.nn as nn
@@ -50,7 +52,7 @@ class Net(nn.Module):
 
             Parámetros:
 
-            - `params` (`dict`): diccionario en el cual se guardan:
+            - `params`: (`dict`) diccionario en el cual se guardan:
 
                 - `vocab_size`: tamaño del vocabulario del dataset.
 
@@ -63,26 +65,18 @@ class Net(nn.Module):
         # Se realiza una llamada al constructor de la clase padre de la red (clase `nn.Module`)
         super(Net, self).__init__()
 
-        """        
-            La primera capa crea una matriz de *embeddings* a partir de las dimensiones de cada vector de embeddings
-            (parámetro `params.embedding_dim`) y del tamaño del diccionario de embeddings (parámetro `num_embeddings`).
-        """
+        # La primera capa crea una matriz de *embeddings* a partir de las dimensiones de cada vector de embeddings
+        # (parámetro `params.embedding_dim`) y del tamaño del diccionario de embeddings (parámetro `num_embeddings`).
         self.embedding = nn.Embedding(params.vocab_size, params.embedding_dim)
 
-        """
-            La segunda capa emplea una red recurrente de tipo LSTM (*Long Short Term Memory*) de manera que utiliza
-            los datos actuales y los del instante anterior, proyectando el embedding de tamaño `params.embedding_dim`
-            en otro punto del espacio con el tamaño `params.lst_hidden_dim`.  
-        """
+        # La segunda capa emplea una red recurrente de tipo LSTM (*Long Short Term Memory*) de manera que utiliza
+        # los datos actuales y los del instante anterior, proyectando el embedding de tamaño `params.embedding_dim`
+        # en otro punto del espacio con el tamaño `params.lst_hidden_dim`.
         self.lstm = nn.LSTM(params.embedding_dim,
                             params.lstm_hidden_dim, batch_first=True)
 
-        # Es una matriz de tamaño lstm_hidden_dim y genera un vector de tamaño number_of_tags
-
-        """
-            Esta última capa es de tipo Linear y recibe una matriz que tiene como tamaño `params.lstm_hidden_dim` 
-            y genera un vector de tamaño `params.number_of_tags`. 
-        """
+        # Esta última capa es de tipo Linear y recibe una matriz que tiene como tamaño `params.lstm_hidden_dim`
+        # y genera un vector de tamaño `params.number_of_tags`.
         self.fc = nn.Linear(params.lstm_hidden_dim, params.number_of_tags)
 
     # === Método `forward` ===
@@ -94,13 +88,13 @@ class Net(nn.Module):
 
             Parámetros:
 
-            - `s` (`Tensor`): contiene un conjunto de frases con dimensiones nxm, donde n hace referencia al
+            - `s`: (`Tensor`) contiene un conjunto de frases con dimensiones nxm, donde n hace referencia al
             tamaño del *batch* y m es la longitud (en tokens) de la frase más larga del batch. En el caso de que
             una frase sea más corta que m, se rellenará con tokens de tipo `PAD` hasta alcanzar esa longitud.
 
             Return:
 
-            - `out` (`Tensor`): tensor que indica, para cada *token* del *batch* de entrada,
+            - `out`: (`Tensor`) tensor que indica, para cada *token* del *batch* de entrada,
             la probabilidad de pertenecer a una de las posibles clases.
         """
 
@@ -117,21 +111,17 @@ class Net(nn.Module):
         # s.shape[2] es lo mismo que elegir s.params.lstm_hidden_dim
         # De esta forma, hemos conseguido serializar la matriz
 
-        """
-        ### Cambia las dimensiones de la matriz de manera que cada fila contiene un token.
-        """
+        # Cambia las dimensiones de la matriz de manera que cada fila contiene un token.
         s = s.view(-1, s.shape[2])
 
         # Aplica la capa Lineal, de manera que proyecta la nueva proyección de cada *embedding* al
         # número de etiquetas finales.
         s = self.fc(s)
 
-        """
-            Aplica la función *SOFTMAX* a la salida de la última capa, de manera que los resultados obtenidos
-            para los valores de las etiquetas de la capa final son normalizados a valores entre 0 y 1,
-            y así pueden ser interpretados como "probabilidades" de que la palabra pertenezca a cada
-            una de las categorías.
-        """
+        # Aplica la función *SOFTMAX* a la salida de la última capa, de manera que los resultados obtenidos
+        # para los valores de las etiquetas de la capa final son normalizados a valores entre 0 y 1,
+        # y así pueden ser interpretados como "probabilidades" de que la palabra pertenezca a cada
+        # una de las categorías.
         return F.log_softmax(s, dim=1)
 
 
@@ -143,17 +133,18 @@ def loss_fn(outputs, labels):
         los tokens.
 
         Parámetros:
-        - `outputs` (`Tensor`): salida del modelo. Tensor que indica, para cada *token* del *batch* de entrada,
+
+        - `outputs`: (`Tensor`) salida del modelo. Tensor que indica, para cada *token* del *batch* de entrada,
             la probabilidad de pertenecer a una de las posibles clases.
 
-        - `labels` (`Tensor`): contiene los distintos labels de los *tokens* del *batch* de entrada codificados
+        - `labels`: (`Tensor`) contiene los distintos labels de los *tokens* del *batch* de entrada codificados
             mediante el método Label Encoding o -1 si es un token de tipo 'PAD'. Sus dimensiones son nxm,
             donde n hace referencia al tamaño del *batch* y m es la cantidad de *tokens* de la frase
             más larga del *batch*.
 
-        Return:
+    Return:
 
-        - `loss` (`Variable`): pérdida de entropía cruzada (LCE) para todos los tokens del batch excepto aquellos
+        - `loss`: (`Variable`) pérdida de entropía cruzada (LCE) para todos los tokens del batch excepto aquellos
             que son de tipo 'PAD'.
     """
 
@@ -187,16 +178,18 @@ def accuracy(outputs, labels):
         excepto aquellos que son de tipo PAD.
 
         Parámetros:
-        - `outputs` (`Tensor`): salida del modelo. Tensor que indica, para cada *token* del *batch* de entrada,
+
+        - `outputs`: (`Tensor`) salida del modelo. Tensor que indica, para cada *token* del *batch* de entrada,
             la probabilidad de pertenecer a una de las posibles clases.
 
-        - `labels` (`Tensor`): contiene los distintos labels de los *tokens* del *batch* de entrada codificados
+        - `labels`: (`Tensor`) contiene los distintos labels de los *tokens* del *batch* de entrada codificados
             mediante el método Label Encoding o -1 si es un token de tipo 'PAD'. Sus dimensiones son nxm,
             donde n hace referencia al tamaño del *batch* y m es la cantidad de *tokens* de la frase
             más larga del *batch*.
 
-        Return:
-        - `accuracy` (`Variable`): Devuelve el cálculo de la precisión del modelo como un número entre 0 y 1.
+    Return:
+
+        - `accuracy`: (`Variable`) Devuelve el cálculo de la precisión del modelo como un número entre 0 y 1.
     """
 
     # Redimensiona el tensor de labels codificado a un vector de una columna y n filas,

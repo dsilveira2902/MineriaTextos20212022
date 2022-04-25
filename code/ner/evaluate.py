@@ -7,7 +7,8 @@ extracción de entidades](https://jaspock.github.io/mtextos/bloque2_practica.htm
 basa en el código del curso [CS230](https://github.com/cs230-stanford/cs230-code-examples)
 de la Universidad de Stanford.
 
-**Autores de los comentarios:**
+*Autores de los comentarios:*
+
     * Laura García Castañeda
     * Diego Silveira Madrid
 
@@ -17,6 +18,7 @@ Seguidamente, se realiza la evaluación del modelo mediante la precisión y la f
 finalmente, se guardan los resultados obtenidos en un archivo JSON.
 """
 
+# === Importar las librerías ===
 import argparse
 import logging
 import os
@@ -35,7 +37,7 @@ parser = argparse.ArgumentParser()
 # Parámetro para definir el directorio que contiene el dataset. Por defecto será `data/small`.
 parser.add_argument('--data_dir', default='data/small', help="Directory containing the dataset")
 # Parámetro para definir el directorio que contiene la configuración del modelo.
-# Por defecto será 'experiments/base_model'
+# Por defecto será `experiments/base_model`.
 parser.add_argument('--model_dir', default='experiments/base_model', help="Directory containing params.json")
 # Parámetro para definir el archivo que contiene el modelo a cargar.
 parser.add_argument('--restore_file', default='best', help="name of the file in --model_dir \
@@ -53,19 +55,19 @@ def evaluate(model, loss_fn, data_iterator, metrics, params, num_steps):
 
         - `loss_fn`: ( `function` ) función de pérdida a utilizar para evaluar el modelo en cada uno de los batches.
 
-        - data_iterator: (`generator`) generador que produce **batches** de datos y etiquetas.
+        - data_iterator: (`generator`) generador que produce *batches* de datos y etiquetas.
 
         - metrics: (`dict`) diccionario que contiene como clave el nombre de la métrica y como valor la función
           que se usa para calcularla.
 
         - params: (`Params`) objeto de la clase Params que contiene las propiedades del conjunto de datos.
 
-        - num_steps: (`int`) número de **batches** a ejecutar en el entrenamiento.
+        - num_steps: (`int`) número de *batches* a ejecutar en el entrenamiento.
 
-        Return:
+    Return:
 
-        - `metrics_mean` (`dict`): diccionario que contiene el valor medio para cada una de las métricas en
-          todos los **batches**.
+        - `metrics_mean`: (`dict`) diccionario que contiene el valor medio para cada una de las métricas en
+          todos los *batches*.
     """
 
     # Establece el modelo en modo de evaluación.
@@ -76,10 +78,10 @@ def evaluate(model, loss_fn, data_iterator, metrics, params, num_steps):
     # calculadas.
     summ = []
 
-    # Itera sobre cada uno de los **batches**
+    # Itera sobre cada uno de los *batches*
     for _ in range(num_steps):
 
-        # Obtiene el siguiente **batch** de datos y de labels
+        # Obtiene el siguiente *batch* de datos y de labels
         data_batch, labels_batch = next(data_iterator)
 
         # Dado un batch de datos, el modelo calcula la salida
@@ -93,7 +95,7 @@ def evaluate(model, loss_fn, data_iterator, metrics, params, num_steps):
         # Toma la salida esperada, la mueve a la CPU, y la convierte en un array de NumPy
         labels_batch = labels_batch.data.cpu().numpy()
 
-        # Crea un diccionario con los valores de cada una de las métricas para ese **batch**,
+        # Crea un diccionario con los valores de cada una de las métricas para ese *batch*,
         # en el cual, las claves son el nombre de la métrica, y el valor es el resultado
         # de aplicar la función de la métrica.
         summary_batch = {metric: metrics[metric](output_batch, labels_batch)
@@ -105,14 +107,14 @@ def evaluate(model, loss_fn, data_iterator, metrics, params, num_steps):
         # Añade el diccionario de métricas de un batch determinado a la lista
         summ.append(summary_batch)
 
-    # Crea un diccionario con el valor medio de cada de las métricas de todos los **batches**
+    # Crea un diccionario con el valor medio de cada de las métricas de todos los *batches*
     metrics_mean = {metric: np.mean([x[metric] for x in summ]) for metric in summ[0]}
 
     # A partir del diccionario `metrics_mean` genera un string con el valor medio de cada una
-    # de las métricas de todos los **batches** separadas por punto y coma.
+    # de las métricas de todos los *batches* separadas por punto y coma.
     metrics_string = " ; ".join("{}: {:05.3f}".format(k, v) for k, v in metrics_mean.items())
 
-    # Muestra un mensaje de información en el **logger** con el resultado de las métricas.
+    # Muestra un mensaje de información en el *logger* con el resultado de las métricas.
     logging.info("- Eval metrics : " + metrics_string)
 
     # Devuelve el diccionario con el valor medio de cada de las métricas
@@ -135,17 +137,17 @@ if __name__ == '__main__':
     # Indica si el uso de la GPU esta disponible
     params.cuda = torch.cuda.is_available()
 
-    # Establece un valor semilla de manera **pseudo-aleatoria** para poder reproducir resultados experimentales
+    # Establece un valor semilla de manera *pseudo-aleatoria* para poder reproducir resultados experimentales
     # con los modelos
     torch.manual_seed(230)
 
     if params.cuda:
         torch.cuda.manual_seed(230)
 
-    # Crea el archivo de **logs** en la ruta indicada como parámetro
+    # Crea el archivo de *logs* en la ruta indicada como parámetro
     utils.set_logger(os.path.join(args.model_dir, 'evaluate.log'))
 
-    # Muestra un mensaje de información en el archivo de **logs** indicando el comienzo de la carga de los datos.
+    # Muestra un mensaje de información en el archivo de *logs* indicando el comienzo de la carga de los datos.
     logging.info("Creating the dataset...")
 
     # Crea un objeto de la clase `DataLoader` en el cual se guarda la información relativa al dataset
@@ -160,31 +162,29 @@ if __name__ == '__main__':
     # Guarda el tamaño de los datos de testeo seleccionados como una propiedad del conjunto de datos
     params.test_size = test_data['size']
 
-    # Crea un generador que produce **batches** de datos y etiquetas a partir de los datos de testeo
+    # Crea un generador que produce *batches* de datos y etiquetas a partir de los datos de testeo
     test_data_iterator = data_loader.data_iterator(test_data, params)
 
-    # Muestra un mensaje de información en el archivo de **logs** indicando el fin de la carga de los datos.
+    # Muestra un mensaje de información en el archivo de *logs* indicando el fin de la carga de los datos.
     logging.info("- done.")
-
-    # Comprueba si se detecta la librería CUDA. Si la encuentra, envía los parámetros a la GPU mediante CUDA.
 
     # Comprueba si la GPU está disponible. En caso afirmativo, se crea una copia del modelo en la GPU
     # y, en caso de que no se encuentre disponible, crea el modelo en la CPU.
     model = net.Net(params).cuda() if params.cuda else net.Net(params)
 
-    # Obtiene la función de pérdida de la red
+    # Obtiene la función de pérdida del modelo
     loss_fn = net.loss_fn
-    # Obtiene un diccionario con las métricas de la red
+    # Obtiene un diccionario con las métricas del modelo
     metrics = net.metrics
 
-    # Muestra un mensaje de información en el archivo de **logs** indicando el inicio de la evaluación del modelo.
+    # Muestra un mensaje de información en el archivo de *logs* indicando el inicio de la evaluación del modelo.
     logging.info("Starting evaluation")
 
     # Carga en la variable `model` la información guardada en el archivo del directorio indicado.
     utils.load_checkpoint(os.path.join(args.model_dir, args.restore_file + '.pth.tar'), model)
 
-    # Se calcula el número de **batches** a partir del tamaño del conjunto de datos de testeo y
-    # del tamaño de los **batches**
+    # Se calcula el número de *batches* a partir del tamaño del conjunto de datos de testeo y
+    # del tamaño de los *batches*
     num_steps = (params.test_size + 1) // params.batch_size
 
     # Evalúa el modelo y obtiene las métricas de testeo

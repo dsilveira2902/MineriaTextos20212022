@@ -7,12 +7,19 @@ extracción de entidades](https://jaspock.github.io/mtextos/bloque2_practica.htm
 basa en el código del curso [CS230](https://github.com/cs230-stanford/cs230-code-examples)
 de la Universidad de Stanford.
 
-**Autores de los comentarios:**
+*Autores de los comentarios:*
+
     * Laura García Castañeda
     * Diego Silveira Madrid
 
-
+En este módulo se define el procesamiento de los datos. Para ello, primero se cargan las propiedades, el vocabulario y
+las etiquetas del dataset, y se guardan en una instancia de la clase Params. Mediante los métodos `load_data` y
+`load_sentences_labels` se procesan las frases y etiquetas de los conjuntos de datos y se devuelven los índices de
+los tokens y las etiquetas de cada conjunto. El método `data_iterator` permite iterar sobre los datos previamente
+procesados mediante un generador, convirtiéndolos en tensores con los índices de los tokens y sus etiquetas.
 """
+
+# === Importar las librerías ===
 import random
 import numpy as np
 import os
@@ -26,17 +33,8 @@ import utils
 
 # === Clase `DataLoader` ===
 class DataLoader(object):
-
     """
-    ****************************************************************
-    **************** PENDIENTE DE COMENTAR *************************
-    ****************************************************************
-        En esta clase se define ...
-        Handles all aspects of the data. Stores the dataset_params, vocabulary and tags with their mappings to indices.
-
-        Parámetros:
-
-        - `object`: ...
+        En esta clase se definen los atributos y funciones relacionados con el almacenamiento y procesamiento de los datos.
     """
 
     # === Método `__init__` ===
@@ -47,9 +45,9 @@ class DataLoader(object):
 
             Parámetros:
 
-            - `data_dir (`str`): ruta del directorio que contiene el archivo con las propiedades del dataset.
+            - `data_dir`: (`str`) ruta del directorio que contiene el archivo con las propiedades del dataset.
 
-            - `params` (`Params`): instancia de la clase **Params**, que contiene las propiedades almacenadas
+            - `params`: (`Params`) instancia de la clase *Params*, que contiene las propiedades almacenadas
             de un archivo JSON.
         """
 
@@ -64,7 +62,7 @@ class DataLoader(object):
         vocab_path = os.path.join(data_dir, 'words.txt')
         # Diccionario que contendrá todas las palabras del dataset como clave y su índice como valor.
         self.vocab = {}
-        # Se leen las palabras del archivo **words.txt** y se extraen al diccionario
+        # Se leen las palabras del archivo *words.txt* y se extraen al diccionario
         with open(vocab_path) as f:
             for i, l in enumerate(f.read().splitlines()):
                 self.vocab[l] = i
@@ -78,12 +76,12 @@ class DataLoader(object):
         tags_path = os.path.join(data_dir, 'tags.txt')
         # Diccionario que contendrá todas las etiquetas del dataset como clave y su índice como valor.
         self.tag_map = {}
-        # Se leen las etiquetas del archivo **tags.txt** y se extraen al diccionario
+        # Se leen las etiquetas del archivo *tags.txt* y se extraen al diccionario
         with open(tags_path) as f:
             for i, t in enumerate(f.read().splitlines()):
                 self.tag_map[t] = i
 
-        # Se lee la información del archivo JSON y se almacena en una instancia de la clase **Params**
+        # Se lee la información del archivo JSON y se almacena en una instancia de la clase *Params*
         params.update(json_path)
 
     # === Método `__load_sentences_labels__` ===
@@ -95,22 +93,22 @@ class DataLoader(object):
 
             Parámetros:
 
-            - `sentences_file` (`str`): ruta del archivo *sentences.txt* que contiene las frases con los tokens separados por espacios.
+            - `sentences_file`: (`str`) ruta del archivo *sentences.txt* que contiene las frases con los tokens separados por espacios.
 
-            - `labels_file` (`str`): ruta del archivo *labels.txt* que contiene las etiquetas.
+            - `labels_file`: (`str`) ruta del archivo *labels.txt* que contiene las etiquetas.
 
-            - `d` (`dict`): diccionario que contendrá las propiedades de las listas sentences y labels
+            - `d`: (`dict`) diccionario que contendrá las propiedades de las listas sentences y labels
         """
 
-        # Lista que contendrá los índices de los tokens de cada una de las frases del archivo **sentences.txt**.
+        # Lista que contendrá los índices de los tokens de cada una de las frases del archivo *sentences.txt*.
         # Estos índices se extraen del vocabulario (variable *vocab*).
         sentences = []
 
-        # Lista que contendrá los índices de las etiquetas de cada una de las frases del archivo **sentences.txt**.
+        # Lista que contendrá los índices de las etiquetas de cada una de las frases del archivo *sentences.txt*.
         # Estos índices se extraen del vocabulario (variable *tag_map*).
         labels = []
 
-        # Se abre el contenido del archivo **sentences.txt**
+        # Se abre el contenido del archivo *sentences.txt*
         with open(sentences_file) as f:
             # Se lee línea a línea el archivo
             for sentence in f.read().splitlines():
@@ -123,7 +121,7 @@ class DataLoader(object):
                 # Por último, se añade dicha lista a la lista principal
                 sentences.append(s)
 
-        # Se abre el contenido del archivo **labels.txt**
+        # Se abre el contenido del archivo *labels.txt*
         with open(labels_file) as f:
             # Se lee línea a línea el archivo
             for sentence in f.read().splitlines():
@@ -154,14 +152,14 @@ class DataLoader(object):
 
             Parámetros:
 
-            - `types` (`list`):  lista que contiene uno o varios de los valores 'train', 'val' y 'test', indicando los
+            - `types`: (`list`) lista que contiene uno o varios de los valores 'train', 'val' y 'test', indicando los
             datos a cargar.
 
-            - `data_dir` (`str`): ruta del directorio que contiene el dataset.
+            - `data_dir`: (`str`) ruta del directorio que contiene el dataset.
 
             Return:
 
-            - `data`: (dict) diccionario que contiene los datos cargados, en función de los valores indicados en `types`.
+            - `data`: (`dict`) diccionario que contiene los datos cargados, en función de los valores indicados en `types`.
         """
 
         # Diccionario que contendrá los datos del dataset a cargar.
@@ -186,20 +184,26 @@ class DataLoader(object):
     # === Método `data_iterator` ===
     def data_iterator(self, data, params, shuffle=False):
         """
-            Returns a generator that yields batches data with labels. Batch size is params.batch_size. Expires after one
-            pass over the data.
+            Carga los datos pasados por parámetro y los convierte en tensores que contienen los índices de los tokens
+            y sus etiquetas. En función del parámetro que indica el tamaño de *batch*, lonchea estos tensores y
+            devuelve un generador.
 
             Parámetros:
 
-            - `data` (`dict`):  contains data which has keys 'data', 'labels' and 'size'
+            - `data`: (`dict`) diccionario que contiene: los tokens, las etiquetas y el número de frases.
 
-            - `params` (`Params`): hyperparameters of the training process.
+            - `params`: (`Params`) instancia de la clase *Params*, que contiene las propiedades almacenadas
+              de un archivo JSON.
 
-            - `shuffle` (`bool`): whether the data should be shuffled
+            - `shuffle`: (`bool`) variable booleana que indica si se deben mezclar los datos o no.
 
             Yields:
-            batch_data: (Variable) dimension batch_size x seq_len with the sentence data
-            batch_labels: (Variable) dimension batch_size x seq_len with the corresponding labels
+
+            - `batch_data`: (Variable/Tensor) matriz de dimensiones nxm, donde n representa el tamaño del batch y m
+              la longitud máxima de una frase. El contenido de dicha matriz son índices de los tokens de las frases.
+
+            - `batch_labels`: (Variable/Tensor) matriz de dimensiones nxm, donde n representa el tamaño del batch y m
+              la longitud máxima de una frase. El contenido de dicha matriz son índices de las etiquetas de las frases.
         """
 
         # Crea una lista con valores numéricos desde 0 hasta n-1, donde n representa el número de frases
@@ -244,19 +248,9 @@ class DataLoader(object):
                 # En caso afirmativo, se crea una copia de los tensores `batch_data` y `batch_labels` en la GPU
                 batch_data, batch_labels = batch_data.cuda(), batch_labels.cuda()
 
-            # Si la GPU no está disponible, entonces convierte los tensores en tensores
-            # Es decir, no hace nada.
+            # En versiones anteriores, se pasaban los tensores a tipo Variable, para representarlos como nodos de un
+            # grafo computacional. Actualmente, esto ya no es necesario.
             batch_data, batch_labels = Variable(batch_data), Variable(batch_labels)
 
-            # Stackoverflow dice esto: https://stackoverflow.com/questions/57580202/whats-the-purpose-of-torch-autograd-variable
-            # The original purpose of Variables was to be able to use automatic differentiation (Source):
-            # Variables are just wrappers for the tensors so you can now easily auto compute the gradients.
-
-            # ****************************************************
-            # ********* PENDIENTE DE MODIFICAR UN POCO ***********
-            # ****************************************************
-            # Obtiene 100 datos y 100 etiquetas y las devuelve
-            # La siguiente vez que se ejecute vuelve a ejecutar el bucle con los siguientes 100 datos y
-            # las siguientes 100 etiquetas
-            # Esto produce un "loncheo" de los datos
+            # En cada iteración del bucle se procesan y se devuelven los elementos de los tensores por *batches*.
             yield batch_data, batch_labels

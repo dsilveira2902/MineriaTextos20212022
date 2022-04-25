@@ -17,10 +17,37 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-0'>#</a>
       </div>
-      
+      <h2>Minería de textos</h2>
+<p>Universidad de Alicante, curso 2021-2022</p>
+<p>Esta documentación forma parte de la práctica &ldquo;<a href="https://jaspock.github.io/mtextos/bloque2_practica.html">Lectura y documentación de un sistema de
+extracción de entidades</a>&rdquo; y se
+basa en el código del curso <a href="https://github.com/cs230-stanford/cs230-code-examples">CS230</a>
+de la Universidad de Stanford.</p>
+<p><em>Autores de los comentarios:</em></p>
+<ul>
+<li>Laura García Castañeda</li>
+<li>Diego Silveira Madrid</li>
+</ul>
+<p>En este módulo se define el procesamiento de los datos. Para ello, primero se cargan las propiedades, el vocabulario y
+las etiquetas del dataset, y se guardan en una instancia de la clase Params. Mediante los métodos <code>load_data</code> y
+<code>load_sentences_labels</code> se procesan las frases y etiquetas de los conjuntos de datos y se devuelven los índices de
+los tokens y las etiquetas de cada conjunto. El método <code>data_iterator</code> permite iterar sobre los datos previamente
+procesados mediante un generador, convirtiéndolos en tensores con los índices de los tokens y sus etiquetas.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+      <div class="highlight"><pre><span></span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <h3><span id="importar-las-librerías" href="importar-las-librerías"> Importar las librerías </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -32,48 +59,15 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-1'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-1'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span> <span class="nc">DataLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
   <div class='section' id='section-2'>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-2'>#</a>
       </div>
-      
+      <h3><span id="clase-<code>dataloader</code>" href="clase-<code>dataloader</code>"> Clase <code>DataLoader</code> </span></h3>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
- 
-        <span class="n">json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;dataset_params.json&#39;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">json_path</span><span class="p">),</span> <span class="s2">&quot;No json file found at </span><span class="si">{}</span><span class="s2">, run build_vocab.py&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">Params</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span>        
-        
-        <span class="n">vocab_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;words.txt&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">vocab_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">unk_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_params</span><span class="o">.</span><span class="n">unk_word</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pad_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_params</span><span class="o">.</span><span class="n">pad_word</span><span class="p">]</span>
-                
-        <span class="n">tags_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;tags.txt&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tag_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tags_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">tag_map</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
-
-        <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">DataLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -82,33 +76,10 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      
+      <p>En esta clase se definen los atributos y funciones relacionados con el almacenamiento y procesamiento de los datos.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">load_sentences_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences_file</span><span class="p">,</span> <span class="n">labels_file</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
-
-        <span class="n">sentences</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sentences_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-                <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="k">if</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> 
-                     <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">unk_ind</span>
-                     <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)]</span>
-                <span class="n">sentences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">labels_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-                <span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_map</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)]</span>
-                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>        
-
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)):</span>
-            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sentences</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span>
-        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -117,21 +88,10 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
       </div>
-      
+      <h3><span id="método-<code>__init__</code>" href="método-<code>__init__</code>"> Método <code>__init__</code> </span></h3>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">):</span>
-
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        
-        <span class="k">for</span> <span class="n">split</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;val&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="n">split</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
-                <span class="n">sentences_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">split</span><span class="p">,</span> <span class="s2">&quot;sentences.txt&quot;</span><span class="p">)</span>
-                <span class="n">labels_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">split</span><span class="p">,</span> <span class="s2">&quot;labels.txt&quot;</span><span class="p">)</span>
-                <span class="n">data</span><span class="p">[</span><span class="n">split</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">load_sentences_labels</span><span class="p">(</span><span class="n">sentences_file</span><span class="p">,</span> <span class="n">labels_file</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">split</span><span class="p">])</span>
-
-        <span class="k">return</span> <span class="n">data</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -140,38 +100,738 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      
+      <p>Método constructor de la clase que carga las propiedades, el vocabulario y las etiquetas del dataset
+   a partir distintos archivos.</p>
+<p>Parámetros:</p>
+<ul>
+<li>
+<p><code>data_dir</code>: (<code>str</code>) ruta del directorio que contiene el archivo con las propiedades del dataset.</p>
+</li>
+<li>
+<p><code>params</code>: (<code>Params</code>) instancia de la clase <em>Params</em>, que contiene las propiedades almacenadas
+   de un archivo JSON.</p>
+</li>
+</ul>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">data_iterator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        
-        <span class="n">order</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]))</span>
-        <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Ruta del archivo que contiene las propiedades del dataset.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;dataset_params.json&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Se comprueba que el archivo se encuentra en la ruta indicada.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">json_path</span><span class="p">),</span> <span class="s2">&quot;No json file found at </span><span class="si">{}</span><span class="s2">, run build_vocab.py&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Se cargan los valores de la configuración del dataset como una propiedad de la clase DataLoader</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">Params</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Ruta del archivo que contiene el vocabulario con todas las palabras del dataset.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">vocab_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;words.txt&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>Diccionario que contendrá todas las palabras del dataset como clave y su índice como valor.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Se leen las palabras del archivo <em>words.txt</em> y se extraen al diccionario</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">vocab_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>Se crean las propiedades de la clase que contendrán las tokens que referencian las palabras desconocidas
+y las de tipo PAD</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">unk_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_params</span><span class="o">.</span><span class="n">unk_word</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pad_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_params</span><span class="o">.</span><span class="n">pad_word</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Ruta del archivo que contiene las etiquetas sintácticas del dataset.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">tags_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;tags.txt&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Diccionario que contendrá todas las etiquetas del dataset como clave y su índice como valor.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">tag_map</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Se leen las etiquetas del archivo <em>tags.txt</em> y se extraen al diccionario</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tags_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tag_map</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>Se lee la información del archivo JSON y se almacena en una instancia de la clase <em>Params</em></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <h3><span id="método-<code>__load_sentences_labels__</code>" href="método-<code>__load_sentences_labels__</code>"> Método <code>__load_sentences_labels__</code> </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">load_sentences_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences_file</span><span class="p">,</span> <span class="n">labels_file</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>Método que carga las frases y etiquetas del dataset, de sus correspondientes archivos. Extrae los índices
+   de los tokens y sus etiquetas en los vocabularios <code>vocab</code> y <code>tag_map</code> y almacena esta información en
+   un diccionario.</p>
+<p>Parámetros:</p>
+<ul>
+<li>
+<p><code>sentences_file</code>: (<code>str</code>) ruta del archivo <em>sentences.txt</em> que contiene las frases con los tokens separados por espacios.</p>
+</li>
+<li>
+<p><code>labels_file</code>: (<code>str</code>) ruta del archivo <em>labels.txt</em> que contiene las etiquetas.</p>
+</li>
+<li>
+<p><code>d</code>: (<code>dict</code>) diccionario que contendrá las propiedades de las listas sentences y labels</p>
+</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Lista que contendrá los índices de los tokens de cada una de las frases del archivo <em>sentences.txt</em>.
+Estos índices se extraen del vocabulario (variable <em>vocab</em>).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">sentences</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>Lista que contendrá los índices de las etiquetas de cada una de las frases del archivo <em>sentences.txt</em>.
+Estos índices se extraen del vocabulario (variable <em>tag_map</em>).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>Se abre el contenido del archivo <em>sentences.txt</em></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sentences_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>Se lee línea a línea el archivo</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>Para cada línea, se extraen los tokens y se comprueba si estos existen en la variable que contiene el vocabulario
+Si existe, se obtiene el índice de dicho token en el vocabulario y se añade a la lista</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="k">if</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>Si no existe, se añade el índice del token UNK</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                     <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">unk_ind</span>
+                     <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>Por último, se añade dicha lista a la lista principal</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">sentences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>Se abre el contenido del archivo <em>labels.txt</em></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">labels_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <p>Se lee línea a línea el archivo</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>Para cada línea, se extraen las etiquetas y se añade su índice en el vocabulario de etiquetas</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_map</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      <p>Por último, se añade dicha lista a la lista principal</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>Comprueba que la longitud de la lista labels y de la lista sentences es igual</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>Para cada elemento, comprueba que el número de tokens de la lista labels y de la lista sentences es igual</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)):</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      <p>Crea la propiedad <code>'data'</code> en el diccionario con el contenido de la lista sentences</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sentences</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      <p>Crea la propiedad <code>'labels'</code> en el diccionario con el contenido de la lista labels</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-34'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      <p>Crea la propiedad <code>'size'</code> con la cantidad de elementos que contiene la lista sentences, haciendo referencia
+cada uno de ellos a una frase</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-35'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      <h3><span id="método-<code>load_data</code>" href="método-<code>load_data</code>"> Método <code>load_data</code> </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      <p>Carga las frases y las etiquetas de los conjuntos de datos indicados del directorio data_dir, y devuelve
+   un diccionario con los índices de los tokens y las etiquetas de cada uno de los conjuntos.</p>
+<p>Parámetros:</p>
+<ul>
+<li>
+<p><code>types</code>: (<code>list</code>) lista que contiene uno o varios de los valores &lsquo;train&rsquo;, &lsquo;val&rsquo; y &lsquo;test&rsquo;, indicando los
+   datos a cargar.</p>
+</li>
+<li>
+<p><code>data_dir</code>: (<code>str</code>) ruta del directorio que contiene el dataset.</p>
+</li>
+</ul>
+<p>Return:</p>
+<ul>
+<li><code>data</code>: (<code>dict</code>) diccionario que contiene los datos cargados, en función de los valores indicados en <code>types</code>.</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      <p>Diccionario que contendrá los datos del dataset a cargar.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-38'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-38'>#</a>
+      </div>
+      <p>Para cada uno de los posibles valores que puede contener la lista <code>types</code></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">split</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;val&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">]:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>Si el conjunto actual pertenece a la lista <code>types</code>, obtiene las rutas de los archivos con las frases
+y las etiquetas de cada uno de los conjuntos y almacena en el diccionario los índices de los tokens
+y de las etiquetas de cada conjunto.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">split</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      <p>Ruta del archivo que contiene las frases</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">sentences_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">split</span><span class="p">,</span> <span class="s2">&quot;sentences.txt&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-41'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-41'>#</a>
+      </div>
+      <p>Ruta del archivo que contiene las etiquetas</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">labels_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">split</span><span class="p">,</span> <span class="s2">&quot;labels.txt&quot;</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">split</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-42'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-42'>#</a>
+      </div>
+      <p>Almacena en el diccionario los indices</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="bp">self</span><span class="o">.</span><span class="n">load_sentences_labels</span><span class="p">(</span><span class="n">sentences_file</span><span class="p">,</span> <span class="n">labels_file</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">split</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">data</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-43'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-43'>#</a>
+      </div>
+      <h3><span id="método-<code>data_iterator</code>" href="método-<code>data_iterator</code>"> Método <code>data_iterator</code> </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">data_iterator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-44'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-44'>#</a>
+      </div>
+      <p>Carga los datos pasados por parámetro y los convierte en tensores que contienen los índices de los tokens
+   y sus etiquetas. En función del parámetro que indica el tamaño de <em>batch</em>, lonchea estos tensores y
+   devuelve un generador.</p>
+<p>Parámetros:</p>
+<ul>
+<li>
+<p><code>data</code>: (<code>dict</code>) diccionario que contiene: los tokens, las etiquetas y el número de frases.</p>
+</li>
+<li>
+<p><code>params</code>: (<code>Params</code>) instancia de la clase <em>Params</em>, que contiene las propiedades almacenadas
+     de un archivo JSON.</p>
+</li>
+<li>
+<p><code>shuffle</code>: (<code>bool</code>) variable booleana que indica si se deben mezclar los datos o no.</p>
+</li>
+</ul>
+<p>Yields:</p>
+<ul>
+<li>
+<p><code>batch_data</code>: (Variable/Tensor) matriz de dimensiones nxm, donde n representa el tamaño del batch y m
+     la longitud máxima de una frase. El contenido de dicha matriz son índices de los tokens de las frases.</p>
+</li>
+<li>
+<p><code>batch_labels</code>: (Variable/Tensor) matriz de dimensiones nxm, donde n representa el tamaño del batch y m
+     la longitud máxima de una frase. El contenido de dicha matriz son índices de las etiquetas de las frases.</p>
+</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-45'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-45'>#</a>
+      </div>
+      <p>Crea una lista con valores numéricos desde 0 hasta n-1, donde n representa el número de frases</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">order</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-46'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-46'>#</a>
+      </div>
+      <p>Si el parámetro <code>shuffle</code> es True, se mezclan los valores de la lista <code>order</code> de manera pseudoaleatoria.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
             <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">230</span><span class="p">)</span>
-            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="n">params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">):</span>
-            <span class="n">batch_sentences</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">]]</span>
-            <span class="n">batch_tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">]]</span>
-
-            <span class="n">batch_max_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">batch_sentences</span><span class="p">])</span>
-
-            <span class="n">batch_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad_ind</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">batch_sentences</span><span class="p">),</span> <span class="n">batch_max_len</span><span class="p">))</span>
-            <span class="n">batch_labels</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">batch_sentences</span><span class="p">),</span> <span class="n">batch_max_len</span><span class="p">))</span>
-
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">batch_sentences</span><span class="p">)):</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">order</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-47'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-47'>#</a>
+      </div>
+      <p>Calcula el número de batches a partir de la cantidad de frases y el tamaño del batch e itera por cada uno de los batches</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="n">params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-48'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-48'>#</a>
+      </div>
+      <p>Obtiene las listas con los índices de los tokens de las frases de n en n elementos, siendo n el tamaño del batch</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">batch_sentences</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">]]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-49'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-49'>#</a>
+      </div>
+      <p>Obtiene las listas con los índices de los etiquetas de las frases de n en n elementos, siendo n el tamaño del batch</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">batch_tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">]]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-50'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-50'>#</a>
+      </div>
+      <p>Obtiene la longitud máxima de una frase, que condiciona la longitud máxima de entrada</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">batch_max_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">batch_sentences</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-51'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-51'>#</a>
+      </div>
+      <p>Crea una matriz con tamaño nxm donde n es la longitud de <code>batch_sentences</code> y m es la longitud
+máxima de una frase, y sus valores son el índice del token de tipo PAD.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">batch_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad_ind</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">batch_sentences</span><span class="p">),</span> <span class="n">batch_max_len</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-52'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-52'>#</a>
+      </div>
+      <p>Crea una matriz con tamaño nxm donde n es la longitud de <code>batch_sentences</code> y m es la longitud
+máxima de una frase, y sus valores son -1.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">batch_labels</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">batch_sentences</span><span class="p">),</span> <span class="n">batch_max_len</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-53'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-53'>#</a>
+      </div>
+      <p>Rellena las matrices <code>batch_data</code> y <code>batch_labels</code> con los índices de los tokens y de las etiquetas
+de las frases, respectivamente.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">batch_sentences</span><span class="p">)):</span>
                 <span class="n">cur_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch_sentences</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
                 <span class="n">batch_data</span><span class="p">[</span><span class="n">j</span><span class="p">][:</span><span class="n">cur_len</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch_sentences</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-                <span class="n">batch_labels</span><span class="p">[</span><span class="n">j</span><span class="p">][:</span><span class="n">cur_len</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch_tags</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-
-            <span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">batch_data</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">batch_labels</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">cuda</span><span class="p">:</span>
-                <span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_labels</span> <span class="o">=</span> <span class="n">batch_data</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="n">batch_labels</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
-
-            <span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_labels</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">batch_data</span><span class="p">),</span> <span class="n">Variable</span><span class="p">(</span><span class="n">batch_labels</span><span class="p">)</span>
-    
-            <span class="k">yield</span> <span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_labels</span>
+                <span class="n">batch_labels</span><span class="p">[</span><span class="n">j</span><span class="p">][:</span><span class="n">cur_len</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch_tags</span><span class="p">[</span><span class="n">j</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-54'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-54'>#</a>
+      </div>
+      <p>Convierte las matrices <code>batch_data</code> y <code>batch_labels</code> en tensores de 2 dimensiones</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">batch_data</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">batch_labels</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-55'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-55'>#</a>
+      </div>
+      <p>Comprueba si la GPU está disponible</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">cuda</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-56'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-56'>#</a>
+      </div>
+      <p>En caso afirmativo, se crea una copia de los tensores <code>batch_data</code> y <code>batch_labels</code> en la GPU</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_labels</span> <span class="o">=</span> <span class="n">batch_data</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="n">batch_labels</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-57'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-57'>#</a>
+      </div>
+      <p>En versiones anteriores, se pasaban los tensores a tipo Variable, para representarlos como nodos de un
+grafo computacional. Actualmente, esto ya no es necesario.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_labels</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">batch_data</span><span class="p">),</span> <span class="n">Variable</span><span class="p">(</span><span class="n">batch_labels</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-58'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-58'>#</a>
+      </div>
+      <p>En cada iteración del bucle se procesan y se devuelven los elementos de los tensores por <em>batches</em>.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">yield</span> <span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_labels</span>
 
 </pre></div>
     </div>

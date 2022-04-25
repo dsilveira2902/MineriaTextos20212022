@@ -54,6 +54,7 @@ PAD_TAG = 'O'
 # Palabra que se utilizará para identificar las palabras desconocidas.
 UNK_WORD = 'UNK'
 
+
 # === Función `save_vocab_to_txt_file` ===
 def save_vocab_to_txt_file(vocab, txt_path):
     """
