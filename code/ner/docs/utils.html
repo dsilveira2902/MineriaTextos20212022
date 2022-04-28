@@ -118,11 +118,8 @@ de la Universidad de Stanford.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      <p>Este método inicializa los parámetros a partir de los datos de un archivo JSON</p>
-<p>Parámetros:</p>
-<ul>
-<li><code>json_path</code> (<code>str</code>): ruta del archivo JSON que contiene la información de los parámetros</li>
-</ul>
+      <p>Este método inicializa los parámetros a partir de los datos de un archivo JSON.</p>
+<p><strong>Parámetros:</strong> <code>json_path</code> (<code>str</code>): ruta del archivo JSON que contiene la información de los parámetros.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -148,11 +145,8 @@ de la Universidad de Stanford.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-7'>#</a>
       </div>
-      <p>Este método guarda los parámetros en un archivo JSON</p>
-<p>Parámetros:</p>
-<ul>
-<li><code>json_path</code>: (<code>str</code>) ruta del archivo JSON en el que se guardan los parámetros</li>
-</ul>
+      <p>Este método guarda los parámetros en un archivo JSON.</p>
+<p><strong>Parámetros:</strong> <code>json_path</code>: (<code>str</code>) ruta del archivo JSON en el que se guardan los parámetros.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -177,11 +171,8 @@ de la Universidad de Stanford.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-9'>#</a>
       </div>
-      <p>Este método actualiza los parámetros a partir de los datos de un archivo JSON</p>
-<p>Parámetros:</p>
-<ul>
-<li><code>json_path</code>: (<code>str</code>) ruta del archivo JSON que contiene la información de los parámetros</li>
-</ul>
+      <p>Este método actualiza los parámetros a partir de los datos de un archivo JSON.</p>
+<p><strong>Parámetros:</strong> <code>json_path</code>: (<code>str</code>) ruta del archivo JSON que contiene la información de los parámetros.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -208,11 +199,8 @@ de la Universidad de Stanford.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-11'>#</a>
       </div>
-      <p>Esta propiedad contiene la información de los parámetros en formato de diccionario</p>
-<p>Return:</p>
-<ul>
-<li><code>__dict__</code>: (<code>dict</code>) propiedad que contiene los parámetros</li>
-</ul>
+      <p>Esta propiedad contiene la información de los parámetros en formato de diccionario.</p>
+<p><strong>Return:</strong> <code>__dict__</code>: (<code>dict</code>) propiedad que contiene los parámetros.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span></pre></div>
@@ -261,7 +249,7 @@ de la Universidad de Stanford.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-15'>#</a>
       </div>
-      <p>Este método inicializa los parámetros <code>steps</code> y <code>total</code> a 0</p>
+      <p>Este método inicializa los parámetros <code>steps</code> y <code>total</code> a 0.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="mi">0</span>
@@ -287,11 +275,8 @@ de la Universidad de Stanford.</p>
         <a class='octothorpe' href='#section-17'>#</a>
       </div>
       <p>Este método actualiza el valor de la propiedad <code>total</code> sumándole el parámetro <code>val</code>
-   y actualiza el valor de la propiedad <code>steps</code> sumándole 1</p>
-<p>Parámetros:</p>
-<ul>
-<li><code>val</code>: (<code>int</code>) Valor que se emplea para actualizar la propiedad <code>total</code></li>
-</ul>
+   y actualiza el valor de la propiedad <code>steps</code> sumándole 1.</p>
+<p><strong>Parámetros:</strong> <code>val</code>: (<code>int</code>) valor que se emplea para actualizar la propiedad <code>total</code>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">+=</span> <span class="n">val</span>
@@ -316,7 +301,7 @@ de la Universidad de Stanford.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-19'>#</a>
       </div>
-      <p>Este método actualiza calcula el valor medio a partir de las propiedades <code>total</code>y <code>steps</code></p>
+      <p>Este método calcula el valor medio a partir de las propiedades <code>total</code>y <code>steps</code>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span></pre></div>
@@ -341,11 +326,8 @@ de la Universidad de Stanford.</p>
         <a class='octothorpe' href='#section-21'>#</a>
       </div>
       <p>Esta función configura las propiedades que empleará el <code>logger</code> para registrar mensajes
-   en la terminal y en el archivo <code>log_path</code></p>
-<p>Parámetros:</p>
-<ul>
-<li><code>log_path</code>: (<code>str</code>) ruta del archivo donde se registrarán los mensajes de información</li>
-</ul>
+   en la terminal y en el archivo <code>log_path</code>.</p>
+<p><strong>Parámetros:</strong> <code>log_path</code>: (<code>str</code>) ruta del archivo donde se registrarán los mensajes de información.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
@@ -360,7 +342,7 @@ de la Universidad de Stanford.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-22'>#</a>
       </div>
-      <p>Configura el formato del mensaje que se escribe en el archivo</p>
+      <p>Configura el formato del mensaje que se escribe en el archivo.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_path</span><span class="p">)</span>
@@ -374,7 +356,7 @@ de la Universidad de Stanford.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-23'>#</a>
       </div>
-      <p>Configura el formato del mensaje que se escribe en la terminal</p>
+      <p>Configura el formato del mensaje que se escribe en la terminal.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">stream_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
@@ -400,14 +382,14 @@ de la Universidad de Stanford.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-25'>#</a>
       </div>
-      <p>Esta función guarda la información contenida en un diccionario en un archivo JSON</p>
-<p>Parámetros:</p>
+      <p>Esta función guarda la información contenida en un diccionario en un archivo JSON.</p>
+<p><strong>Parámetros:</strong></p>
 <ul>
 <li>
-<p><code>d</code>: (<code>dict</code>) diccionario con las propiedades del conjunto de datos</p>
+<p><code>d</code>: (<code>dict</code>) diccionario con las propiedades del conjunto de datos.</p>
 </li>
 <li>
-<p><code>json_path</code>: (<code>str</code>) ruta del archivo JSON en el que se guardan los parámetros</p>
+<p><code>json_path</code>: (<code>str</code>) ruta del archivo JSON en el que se guardan los parámetros.</p>
 </li>
 </ul>
     </div>
@@ -421,8 +403,8 @@ de la Universidad de Stanford.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-26'>#</a>
       </div>
-      <p>Iteramos por cada uno de los elementos del diccionario para convertirlos a <em>float</em>
-Ya que JSON no soporta las variables de <em>numpy</em></p>
+      <p>Iteramos por cada uno de los elementos del diccionario para convertirlos a <em>float</em>.
+Ya que JSON no soporta las variables de <em>NumPy</em>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
@@ -448,8 +430,8 @@ Ya que JSON no soporta las variables de <em>numpy</em></p>
         <a class='octothorpe' href='#section-28'>#</a>
       </div>
       <p>Esta función guarda los parámetros del modelo en un determinado momento del entrenamiento. Además, si este
-   es el mejor modelo encontrado hasta el momento lo guarda en una dirección adicional.</p>
-<p>Parámetros:</p>
+   es el mejor modelo encontrado hasta el momento, lo guarda en una dirección adicional.</p>
+<p><strong>Parámetros:</strong></p>
 <ul>
 <li>
 <p><code>state</code>: (<code>dict</code>) contiene el parámetro <code>state_dict</code> del modelo, el cuál contiene toda la información
@@ -459,7 +441,7 @@ Ya que JSON no soporta las variables de <em>numpy</em></p>
 <p><code>ìs_best</code>: (<code>bool</code>) variable que indica si este modelo es el mejor encontrado hasta el momento.</p>
 </li>
 <li>
-<p><code>checkpoint</code>: (<code>str</code>) directorio en el que se guardará la información del checkpoint.</p>
+<p><code>checkpoint</code>: (<code>str</code>) directorio en el que se guardará la información del <em>checkpoint</em>.</p>
 </li>
 </ul>
     </div>
@@ -473,7 +455,7 @@ Ya que JSON no soporta las variables de <em>numpy</em></p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-29'>#</a>
       </div>
-      <p>Si todavía no existe el directorio en el que se guardan los checkpoints, se crea.</p>
+      <p>Si todavía no existe el directorio en el que se guardan los <em>checkpoints</em>, se crea.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="s1">&#39;last.pth.tar&#39;</span><span class="p">)</span>
@@ -530,18 +512,18 @@ reservado para el mejor modelo.</p>
       </div>
       <p>Esta función utiliza la información guardada de un modelo en un determinado momento para cargarla de nuevo y
    poder trabajar con ella al instante sin necesidad de realizar un nuevo entrenamiento.</p>
-<p>Parámetros:</p>
+<p><strong>Parámetros:</strong></p>
 <ul>
 <li>
-<p><code>checkpoint</code>: (<code>str</code>) directorio en el se encuentra guardada la información del modelo</p>
+<p><code>checkpoint</code>: (<code>str</code>) directorio en el se encuentra guardada la información del modelo.</p>
 </li>
 <li>
-<p><code>model</code>: (<code>torch.nn.Module</code>) modelo en el que vamos a cargar los datos guardados en el checkpoint.
+<p><code>model</code>: (<code>torch.nn.Module</code>) modelo en el que vamos a cargar los datos guardados en el <em>checkpoint</em>.
        Este debe tener la misma estructura que el que se utilizó para guardar el modelo.</p>
 </li>
 <li>
 <p><code>optimizer</code>: (<code>torch.optim</code>) estructura donde se guardará el optimizador que utliza el modelo en caso de
-       que este fuera guardado en el checkpoint del modelo.</p>
+       que este fuera guardado en el <em>checkpoint</em> del modelo.</p>
 </li>
 </ul>
     </div>
@@ -555,7 +537,7 @@ reservado para el mejor modelo.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-34'>#</a>
       </div>
-      <p>Se busca el archivo a cargar.</p>
+      <p>Si el archivo de <em>checkpoint</em> no existe, se lanza una excepción indicando que el archivo no existe.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">):</span>
@@ -568,7 +550,7 @@ reservado para el mejor modelo.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-35'>#</a>
       </div>
-      <p>Se carga el modelo a modo de diccionario</p>
+      <p>Se carga el modelo en forma de diccionario.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span></pre></div>
@@ -580,7 +562,7 @@ reservado para el mejor modelo.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-36'>#</a>
       </div>
-      <p>Se crea el modelo a partir de la información del diccionario</p>
+      <p>Se crea el modelo a partir de la información del diccionario.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;state_dict&#39;</span><span class="p">])</span></pre></div>
@@ -592,7 +574,7 @@ reservado para el mejor modelo.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-37'>#</a>
       </div>
-      <p>En el caso de que se haya guardado el optimizador, este también es cargado.</p>
+      <p>En el caso de que se haya guardado el optimizador, este también se carga.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">if</span> <span class="n">optimizer</span><span class="p">:</span>

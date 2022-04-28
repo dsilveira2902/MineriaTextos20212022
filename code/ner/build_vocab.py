@@ -47,9 +47,9 @@ parser.add_argument('--data_dir', default='data/small', help="Directory containi
 Distintas variables globales que se utilizarán para completar 
 los distintos archivos de vocabulario.
 """
-# Palabra que se utilizará como *padding*
+# Palabra que se utilizará como *padding*.
 PAD_WORD = '<pad>'
-# Etiqueta que se utilizará para las palabras de *padding*
+# Etiqueta que se utilizará para las palabras de *padding*.
 PAD_TAG = 'O'
 # Palabra que se utilizará para identificar las palabras desconocidas.
 UNK_WORD = 'UNK'
@@ -62,11 +62,11 @@ def save_vocab_to_txt_file(vocab, txt_path):
         de entrenamiento y las escribe cada una en una nueva línea de
         un archivo txt.
 
-        Parámetros:
+        **Parámetros:**
 
-        - `vocab`: (`list`) vocabulario de palabras extraídas del texto de entrenamiento
+        - `vocab`: (`list`) vocabulario de palabras extraídas del texto de entrenamiento.
 
-        - `txt_path`: (`str`) ruta del archivo en el que se guardan las palabras del vocabulario
+        - `txt_path`: (`str`) ruta del archivo en el que se guardan las palabras del vocabulario.
     """
     with open(txt_path, "w") as f:
         for token in vocab:
@@ -76,13 +76,13 @@ def save_vocab_to_txt_file(vocab, txt_path):
 # === Función `save_dict_to_json` ===
 def save_dict_to_json(d, json_path):
     """
-        Esta función guarda la información contenida en un diccionario en un archivo JSON
+        Esta función guarda la información contenida en un diccionario en un archivo JSON.
 
-        Parámetros:
+        **Parámetros:**
 
-        - `d`: (`dict`) diccionario con las propiedades del conjunto de datos
+        - `d`: (`dict`) diccionario con las propiedades del conjunto de datos.
 
-        - `json_path`: (`str`) ruta del archivo JSON en el que se guardan los parámetros
+        - `json_path`: (`str`) ruta del archivo JSON en el que se guardan los parámetros.
     """
     with open(json_path, 'w') as f:
         d = {k: v for k, v in d.items()}
@@ -94,21 +94,20 @@ def update_vocab(txt_path, vocab):
     """
         Esta función actualiza el contenido de la estructura de tipo `Counter`
         con el número de apariciones de cada elemento dentro del archivo y
-        devuelve el número total de líneas del archivo txt
+        devuelve el número total de líneas del archivo txt.
 
-        Parámetros:
+        **Parámetros:**
 
-        - `txt_path`: (`str`) ruta del archivo del que se obtiene el contenido a procesar, con una frase por línea
+        - `txt_path`: (`str`) ruta del archivo del que se obtiene el contenido a procesar, con una frase por línea.
 
-        - `vocab`: (`Counter`) estructura que registra el número de apariciones de cada elemento
+        - `vocab`: (`Counter`) estructura que registra el número de apariciones de cada elemento.
 
-    Return:
 
-        - `i`: (`int`) número de líneas del archivo
+        **Return:** ``i``: (``int``) número de líneas del archivo.
     """
     with open(txt_path) as f:
         # La función `enumerate()` genera un diccionario con num_linea-1 como clave
-        # y el contenido de la línea como valor
+        # y el contenido de la línea como valor.
         for i, line in enumerate(f):
             vocab.update(line.strip().split(' '))
 
@@ -122,20 +121,20 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     print("Building word vocabulary...")
-    # Se crea un contador de palabras vacío para el vocabulario
+    # Se crea un contador de palabras vacío para el vocabulario.
     words = Counter()
     # Se añaden las palabras al contador.
-    # Además se guarda en una variable el número de palabras de cada archivo consultado.
+    # Además, se guarda en una variable el número de palabras de cada archivo consultado.
     size_train_sentences = update_vocab(os.path.join(args.data_dir, 'train/sentences.txt'), words)
     size_dev_sentences = update_vocab(os.path.join(args.data_dir, 'val/sentences.txt'), words)
     size_test_sentences = update_vocab(os.path.join(args.data_dir, 'test/sentences.txt'), words)
     print("- done.")
 
     print("Building tag vocabulary...")
-    # Se crea un contador de etiquetas vacío para el vocabulario
+    # Se crea un contador de etiquetas vacío para el vocabulario.
     tags = Counter()
     # Se añaden las etiquetas al contador.
-    # Además se guarda en una variable el número de etiquetas de cada archivo consultado.
+    # Además, se guarda en una variable el número de etiquetas de cada archivo consultado.
     size_train_tags = update_vocab(os.path.join(args.data_dir, 'train/labels.txt'), tags)
     size_dev_tags = update_vocab(os.path.join(args.data_dir, 'val/labels.txt'), tags)
     size_test_tags = update_vocab(os.path.join(args.data_dir, 'test/labels.txt'), tags)
@@ -150,7 +149,7 @@ if __name__ == '__main__':
     assert size_test_sentences == size_test_tags
 
     """
-        Se crea una compresión de los contadores de palabras y etiqueta. De manera que al
+        Se crea una compresión de los contadores de palabras y etiqueta. De manera que, al
         iterar a lo largo de cada uno de los contadores, solo se mantendrán en la lista 
         aquellos elementos que aparezcan un número mínimo de veces en el vocabulario. (El
         número mínimo de veces vendrá definido por los argumentos).
@@ -160,7 +159,7 @@ if __name__ == '__main__':
 
     """ 
         Se añaden a la lista de palabras y de etiquetas la palabra y la etiqueta correspondiente
-        al *padding*
+        al *padding*.
     """
     if PAD_WORD not in words: words.append(PAD_WORD)
     if PAD_TAG not in tags: tags.append(PAD_TAG)
@@ -188,12 +187,12 @@ if __name__ == '__main__':
     }
 
     """
-        Se guardan las propiedades del dataset en un archivo JSON
+        Se guardan las propiedades del dataset en un archivo JSON.
     """
     save_dict_to_json(sizes, os.path.join(args.data_dir, 'dataset_params.json'))
 
     """
-        Se muestran por consola las propiedades del dataset
+        Se muestran por consola las propiedades del dataset.
     """
     to_print = "\n".join("- {}: {}".format(k, v) for k, v in sizes.items())
     print("Characteristics of the dataset:\n{}".format(to_print))

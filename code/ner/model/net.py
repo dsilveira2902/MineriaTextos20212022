@@ -14,8 +14,8 @@ de la Universidad de Stanford.
 
 En este módulo se define el modelo de la red neuronal, su función de pérdida y su precisión.
 
- * El modelo de red neuronal define la disposición de las capas. En él se utilizan: una capa de Embeddings,
-   una capa LSTM y una capa Linear. Posteriormente, en el método forward se define el procesamiento de la
+ * El modelo de red neuronal define la disposición de las capas. En él se utilizan: una capa de **Embeddings**,
+   una capa **LSTM** y una capa **Linear**. Posteriormente, en el método `forward`, se define el procesamiento de la
    información entre las capas.
 
  * La función de pérdida emplea el cálculo de la entropía cruzada para medir el error.
@@ -34,11 +34,9 @@ import torch.nn.functional as F
 class Net(nn.Module):
     """
         En esta clase se define la estructura de la red neuronal, heredando la estructura proporcionada
-        por la clase nn.Module de la librería PyTorch (`torch.nn.Module`).
+        por la clase `nn.Module` de la librería PyTorch (`torch.nn.Module`).
 
-        Parámetros:
-
-        - `nn.Module`: clase base que proporciona PyTorch para la creación de redes neuronales.
+        **Parámetros:** `nn.Module`: clase base que proporciona PyTorch para la creación de redes neuronales.
         Modificando esta clase podemos crear redes neuronales propias con diferentes capas y
         propiedades.
 
@@ -50,7 +48,7 @@ class Net(nn.Module):
             Método constructor de la red neuronal, al cual se llama cada vez que se crea una red
             y define cada una de las capas por las que fluirá la información a través del modelo.
 
-            Parámetros:
+            **Parámetros:**
 
             - `params`: (`dict`) diccionario en el cual se guardan:
 
@@ -71,7 +69,7 @@ class Net(nn.Module):
 
         # La segunda capa emplea una red recurrente de tipo LSTM (*Long Short Term Memory*) de manera que utiliza
         # los datos actuales y los del instante anterior, proyectando el embedding de tamaño `params.embedding_dim`
-        # en otro punto del espacio con el tamaño `params.lst_hidden_dim`.
+        # en otro punto del espacio con el tamaño `params.lstm_hidden_dim`.
         self.lstm = nn.LSTM(params.embedding_dim,
                             params.lstm_hidden_dim, batch_first=True)
 
@@ -86,15 +84,11 @@ class Net(nn.Module):
             capas durante el *paso hacia delante* de cada uno de los *batches*, utilizando los componentes definidos
             en el constructor.
 
-            Parámetros:
+            **Parámetros:** `s`: (`Tensor`) contiene un conjunto de frases con dimensiones **nxm**, donde **n** hace referencia al
+            tamaño del *batch* y **m** es la longitud (en tokens) de la frase más larga del batch. En el caso de que
+            una frase sea más corta que **m**, se rellenará con tokens de tipo `PAD` hasta alcanzar esa longitud.
 
-            - `s`: (`Tensor`) contiene un conjunto de frases con dimensiones nxm, donde n hace referencia al
-            tamaño del *batch* y m es la longitud (en tokens) de la frase más larga del batch. En el caso de que
-            una frase sea más corta que m, se rellenará con tokens de tipo `PAD` hasta alcanzar esa longitud.
-
-            Return:
-
-            - `out`: (`Tensor`) tensor que indica, para cada *token* del *batch* de entrada,
+            **Return:** `out`: (`Tensor`) tensor que indica, para cada *token* del *batch* de entrada,
             la probabilidad de pertenecer a una de las posibles clases.
         """
 
@@ -108,8 +102,8 @@ class Net(nn.Module):
         s = s.contiguous()
 
         # Transforma los datos en una matriz de dos dimensiones (la primera dimensión la calcula automáticamente).
-        # s.shape[2] es lo mismo que elegir s.params.lstm_hidden_dim
-        # De esta forma, hemos conseguido serializar la matriz
+        # `s.shape[2]` es lo mismo que elegir `s.params.lstm_hidden_dim`.
+        # De esta forma, hemos conseguido serializar la matriz.
 
         # Cambia las dimensiones de la matriz de manera que cada fila contiene un token.
         s = s.view(-1, s.shape[2])
@@ -132,40 +126,38 @@ def loss_fn(outputs, labels):
         de los resultados proporcionados por el modelo y las etiquetas de
         los tokens.
 
-        Parámetros:
+        **Parámetros:**
 
         - `outputs`: (`Tensor`) salida del modelo. Tensor que indica, para cada *token* del *batch* de entrada,
             la probabilidad de pertenecer a una de las posibles clases.
 
         - `labels`: (`Tensor`) contiene los distintos labels de los *tokens* del *batch* de entrada codificados
-            mediante el método Label Encoding o -1 si es un token de tipo 'PAD'. Sus dimensiones son nxm,
-            donde n hace referencia al tamaño del *batch* y m es la cantidad de *tokens* de la frase
+            mediante el método Label Encoding o -1 si es un token de tipo `PAD`. Sus dimensiones son **nxm**,
+            donde **n** hace referencia al tamaño del *batch* y **m** es la cantidad de *tokens* de la frase
             más larga del *batch*.
 
-    Return:
-
-        - `loss`: (`Variable`) pérdida de entropía cruzada (LCE) para todos los tokens del batch excepto aquellos
-            que son de tipo 'PAD'.
+        **Return:** `loss`: (`Variable`) pérdida de entropía cruzada (LCE) para todos los tokens del batch excepto aquellos
+        que son de tipo `PAD`.
     """
 
-    # Al pasar como parámetro el valor -1 redimensiona el tensor de labels codificado
-    # a un vector de una columna y n filas, siendo el número de filas asignado
+    # Al pasar como parámetro el valor -1, redimensiona el tensor de labels codificado
+    # a un vector de una columna y **n** filas, siendo el número de filas asignado
     # automáticamente en función del número de elementos.
     labels = labels.view(-1)
 
-    # Genera una máscara de valores de tipo float, en la cual los valores PAD tendrán asignado
+    # Genera una máscara de valores de tipo float, en la cual los valores `PAD` tendrán asignado
     # el valor 0.0 y los demás el valor 1.0.
     mask = (labels >= 0).float()
 
-    # Emplea la aritmética modular para convertir los valores -1 de la etiqueta PAD en valores positivos.
+    # Emplea la aritmética modular para convertir los valores -1 de la etiqueta `PAD` en valores positivos.
     # A pesar de la modificación de estos valores, la creación de la máscara anterior hace que no afecte
     # al entrenamiento de la red neuronal.
     labels = labels % outputs.shape[1]
 
-    # Calcula el número de tokens totales que no son de tipo PAD
+    # Calcula el número de tokens totales que no son de tipo `PAD`.
     num_tokens = int(torch.sum(mask))
 
-    # Emplea la máscara para obviar los valores que son de tipo PAD y, mediante el sumatorio,
+    # Emplea la máscara para obviar los valores que son de tipo `PAD` y, mediante el sumatorio,
     # calcula la entropía cruzada de los demás valores de los outputs y los divide entre el
     # número total de tokens.
     return -torch.sum(outputs[range(outputs.shape[0]), labels]*mask)/num_tokens
@@ -175,35 +167,33 @@ def loss_fn(outputs, labels):
 def accuracy(outputs, labels):
     """
         Calcula la precisión del modelo a partir de los valores reales y los predichos para todos los tokens
-        excepto aquellos que son de tipo PAD.
+        excepto aquellos que son de tipo `PAD`.
 
-        Parámetros:
+        **Parámetros:**
 
         - `outputs`: (`Tensor`) salida del modelo. Tensor que indica, para cada *token* del *batch* de entrada,
             la probabilidad de pertenecer a una de las posibles clases.
 
         - `labels`: (`Tensor`) contiene los distintos labels de los *tokens* del *batch* de entrada codificados
-            mediante el método Label Encoding o -1 si es un token de tipo 'PAD'. Sus dimensiones son nxm,
-            donde n hace referencia al tamaño del *batch* y m es la cantidad de *tokens* de la frase
+            mediante el método Label Encoding o -1 si es un token de tipo `PAD`. Sus dimensiones son **nxm**,
+            donde **n** hace referencia al tamaño del *batch* y **m** es la cantidad de *tokens* de la frase
             más larga del *batch*.
 
-    Return:
-
-        - `accuracy`: (`Variable`) Devuelve el cálculo de la precisión del modelo como un número entre 0 y 1.
+    **Return:** `accuracy`: (`Variable`) Devuelve el cálculo de la precisión del modelo como un número entre 0 y 1.
     """
 
-    # Redimensiona el tensor de labels codificado a un vector de una columna y n filas,
+    # Redimensiona el tensor de labels codificado a un vector de una columna y **n** filas,
     # siendo el número de filas asignado automáticamente en función del número de elementos.
     labels = labels.ravel()
 
-    # Genera una máscara de valores de tipo booleano, en la cual los valores PAD tendrán asignado
+    # Genera una máscara de valores de tipo booleano, en la cual los valores `PAD` tendrán asignado
     # el valor False y los demás el valor True.
     mask = (labels >= 0)
 
     # Para cada uno de los tokens, devuelve el índice de la clase predicha cuyo valor es más probable.
     outputs = np.argmax(outputs, axis=1)
 
-    # Emplea la máscara para obviar los valores que son de tipo PAD y, mediante la división del número
+    # Emplea la máscara para obviar los valores que son de tipo `PAD` y, mediante la división del número
     # de elementos predichos correctamente entre el número de elementos totales, calcula la precisión
     # del modelo.
     return np.sum(outputs == labels)/float(np.sum(mask))

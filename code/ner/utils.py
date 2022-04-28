@@ -50,11 +50,9 @@ class Params():
     # === Método `__init__` ===
     def __init__(self, json_path):
         """
-            Este método inicializa los parámetros a partir de los datos de un archivo JSON
+            Este método inicializa los parámetros a partir de los datos de un archivo JSON.
 
-            Parámetros:
-
-            * `json_path` (`str`): ruta del archivo JSON que contiene la información de los parámetros
+            **Parámetros:** `json_path` (`str`): ruta del archivo JSON que contiene la información de los parámetros.
         """
         with open(json_path) as f:
             params = json.load(f)
@@ -63,11 +61,9 @@ class Params():
     # === Método `save` ===
     def save(self, json_path):
         """
-            Este método guarda los parámetros en un archivo JSON
+            Este método guarda los parámetros en un archivo JSON.
 
-            Parámetros:
-
-            * `json_path`: (`str`) ruta del archivo JSON en el que se guardan los parámetros
+            **Parámetros:** `json_path`: (`str`) ruta del archivo JSON en el que se guardan los parámetros.
         """
         with open(json_path, 'w') as f:
             json.dump(self.__dict__, f, indent=4)
@@ -75,11 +71,9 @@ class Params():
     # === Método `update` ===
     def update(self, json_path):
         """
-            Este método actualiza los parámetros a partir de los datos de un archivo JSON
+            Este método actualiza los parámetros a partir de los datos de un archivo JSON.
 
-            Parámetros:
-
-            * `json_path`: (`str`) ruta del archivo JSON que contiene la información de los parámetros
+            **Parámetros:** `json_path`: (`str`) ruta del archivo JSON que contiene la información de los parámetros.
         """
         with open(json_path) as f:
             params = json.load(f)
@@ -89,11 +83,9 @@ class Params():
     @property
     def dict(self):
         """
-            Esta propiedad contiene la información de los parámetros en formato de diccionario
+            Esta propiedad contiene la información de los parámetros en formato de diccionario.
 
-            Return:
-
-            * `__dict__`: (`dict`) propiedad que contiene los parámetros
+            **Return:** `__dict__`: (`dict`) propiedad que contiene los parámetros.
         """
         return self.__dict__
 
@@ -108,7 +100,7 @@ class RunningAverage():
     # === Método `__init__` ===
     def __init__(self):
         """
-            Este método inicializa los parámetros `steps` y `total` a 0
+            Este método inicializa los parámetros `steps` y `total` a 0.
         """
         self.steps = 0
         self.total = 0
@@ -117,11 +109,9 @@ class RunningAverage():
     def update(self, val):
         """
             Este método actualiza el valor de la propiedad `total` sumándole el parámetro `val`
-            y actualiza el valor de la propiedad `steps` sumándole 1
+            y actualiza el valor de la propiedad `steps` sumándole 1.
 
-            Parámetros:
-
-            * `val`: (`int`) Valor que se emplea para actualizar la propiedad `total`
+            **Parámetros:** `val`: (`int`) valor que se emplea para actualizar la propiedad `total`.
         """
         self.total += val
         self.steps += 1
@@ -129,7 +119,7 @@ class RunningAverage():
     # === Método `__call__` ===
     def __call__(self):
         """
-            Este método actualiza calcula el valor medio a partir de las propiedades `total`y `steps`
+            Este método calcula el valor medio a partir de las propiedades `total`y `steps`.
         """
         return self.total / float(self.steps)
 
@@ -138,22 +128,20 @@ class RunningAverage():
 def set_logger(log_path):
     """
         Esta función configura las propiedades que empleará el `logger` para registrar mensajes
-        en la terminal y en el archivo `log_path`
+        en la terminal y en el archivo `log_path`.
 
-        Parámetros:
-
-        * `log_path`: (`str`) ruta del archivo donde se registrarán los mensajes de información
+        **Parámetros:** `log_path`: (`str`) ruta del archivo donde se registrarán los mensajes de información.
     """
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
 
     if not logger.handlers:
-        # Configura el formato del mensaje que se escribe en el archivo
+        # Configura el formato del mensaje que se escribe en el archivo.
         file_handler = logging.FileHandler(log_path)
         file_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s: %(message)s'))
         logger.addHandler(file_handler)
 
-        # Configura el formato del mensaje que se escribe en la terminal
+        # Configura el formato del mensaje que se escribe en la terminal.
         stream_handler = logging.StreamHandler()
         stream_handler.setFormatter(logging.Formatter('%(message)s'))
         logger.addHandler(stream_handler)
@@ -162,17 +150,17 @@ def set_logger(log_path):
 # === Función `save_dict_to_json` ===
 def save_dict_to_json(d, json_path):
     """
-        Esta función guarda la información contenida en un diccionario en un archivo JSON
+        Esta función guarda la información contenida en un diccionario en un archivo JSON.
 
-        Parámetros:
+        **Parámetros:**
 
-        * `d`: (`dict`) diccionario con las propiedades del conjunto de datos
+        - `d`: (`dict`) diccionario con las propiedades del conjunto de datos.
 
-        * `json_path`: (`str`) ruta del archivo JSON en el que se guardan los parámetros
+        - `json_path`: (`str`) ruta del archivo JSON en el que se guardan los parámetros.
     """
     with open(json_path, 'w') as f:
-        # Iteramos por cada uno de los elementos del diccionario para convertirlos a *float*
-        # Ya que JSON no soporta las variables de *numpy*
+        # Iteramos por cada uno de los elementos del diccionario para convertirlos a *float*.
+        # Ya que JSON no soporta las variables de *NumPy*.
         d = {k: float(v) for k, v in d.items()}
         json.dump(d, f, indent=4)
 
@@ -181,19 +169,19 @@ def save_dict_to_json(d, json_path):
 def save_checkpoint(state, is_best, checkpoint):
     """
         Esta función guarda los parámetros del modelo en un determinado momento del entrenamiento. Además, si este
-        es el mejor modelo encontrado hasta el momento lo guarda en una dirección adicional.
+        es el mejor modelo encontrado hasta el momento, lo guarda en una dirección adicional.
 
-        Parámetros:
+        **Parámetros:**
 
-        * `state`: (`dict`) contiene el parámetro `state_dict` del modelo, el cuál contiene toda la información
+        - `state`: (`dict`) contiene el parámetro `state_dict` del modelo, el cuál contiene toda la información
         necesaria para replicar el modelo.
 
-        * `ìs_best`: (`bool`) variable que indica si este modelo es el mejor encontrado hasta el momento.
+        - `ìs_best`: (`bool`) variable que indica si este modelo es el mejor encontrado hasta el momento.
 
-        * `checkpoint`: (`str`) directorio en el que se guardará la información del checkpoint.
+        - `checkpoint`: (`str`) directorio en el que se guardará la información del *checkpoint*.
     """
 
-    # Si todavía no existe el directorio en el que se guardan los checkpoints, se crea.
+    # Si todavía no existe el directorio en el que se guardan los *checkpoints*, se crea.
     filepath = os.path.join(checkpoint, 'last.pth.tar')
     if not os.path.exists(checkpoint):
         print("Checkpoint Directory does not exist! Making directory {}".format(checkpoint))
@@ -216,27 +204,27 @@ def load_checkpoint(checkpoint, model, optimizer=None):
         Esta función utiliza la información guardada de un modelo en un determinado momento para cargarla de nuevo y
         poder trabajar con ella al instante sin necesidad de realizar un nuevo entrenamiento.
 
-        Parámetros:
+        **Parámetros:**
 
-        * `checkpoint`: (`str`) directorio en el se encuentra guardada la información del modelo
+        - `checkpoint`: (`str`) directorio en el se encuentra guardada la información del modelo.
 
-        * `model`: (`torch.nn.Module`) modelo en el que vamos a cargar los datos guardados en el checkpoint.
+        - `model`: (`torch.nn.Module`) modelo en el que vamos a cargar los datos guardados en el *checkpoint*.
             Este debe tener la misma estructura que el que se utilizó para guardar el modelo.
 
-        * `optimizer`: (`torch.optim`) estructura donde se guardará el optimizador que utliza el modelo en caso de
-            que este fuera guardado en el checkpoint del modelo.
+        - `optimizer`: (`torch.optim`) estructura donde se guardará el optimizador que utliza el modelo en caso de
+            que este fuera guardado en el *checkpoint* del modelo.
     """
 
-    # Se busca el archivo a cargar.
+    # Si el archivo de *checkpoint* no existe, se lanza una excepción indicando que el archivo no existe.
     if not os.path.exists(checkpoint):
         raise ("File doesn't exist {}".format(checkpoint))
 
-    # Se carga el modelo a modo de diccionario
+    # Se carga el modelo en forma de diccionario.
     checkpoint = torch.load(checkpoint)
-    # Se crea el modelo a partir de la información del diccionario
+    # Se crea el modelo a partir de la información del diccionario.
     model.load_state_dict(checkpoint['state_dict'])
 
-    # En el caso de que se haya guardado el optimizador, este también es cargado.
+    # En el caso de que se haya guardado el optimizador, este también se carga.
     if optimizer:
         optimizer.load_state_dict(checkpoint['optim_dict'])
 

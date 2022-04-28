@@ -23,14 +23,14 @@
 extracción de entidades</a>&rdquo; y se
 basa en el código del curso <a href="https://github.com/cs230-stanford/cs230-code-examples">CS230</a>
 de la Universidad de Stanford.</p>
-<p><em>Autores de los comentarios:</em></p>
+<p><strong>Autores de los comentarios:</strong></p>
 <ul>
 <li>Laura García Castañeda</li>
 <li>Diego Silveira Madrid</li>
 </ul>
 <p>En este módulo se define la evaluación de los modelos. Para ello, en primer lugar, se cargan los
 datos de testeo. A continuación, se carga un modelo a partir de su información guardada previamente.
-Seguidamente, se realiza la evaluación del modelo mediante la precisión y la función de pérdida y,
+Seguidamente, se realiza la evaluación del modelo mediante la métrica de precisión y la función de pérdida y,
 finalmente, se guardan los resultados obtenidos en un archivo JSON.</p>
     </div>
     <div class='code'>
@@ -101,7 +101,7 @@ Por defecto será <code>experiments/base_model</code>.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      <p>Parámetro para definir el archivo que contiene el modelo a cargar.</p>
+      <p>Parámetro para definir el archivo que contiene el modelo a cargar. Por defecto será <code>best</code>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--restore_file&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;name of the file in --model_dir </span><span class="se">\</span>
@@ -127,33 +127,30 @@ Por defecto será <code>experiments/base_model</code>.</p>
         <a class='octothorpe' href='#section-7'>#</a>
       </div>
       <p>Evalúa el modelo en <code>num_steps</code> batches.</p>
-<p>Parámetros:</p>
+<p><strong>Parámetros:</strong></p>
 <ul>
 <li>
-<p><code>model</code>: (<code>torch.nn.Module</code>) es un objeto de la clase Net, que hace referencia a la red neuronal.</p>
+<p><code>model</code>: (<code>torch.nn.Module</code>) es un objeto de la clase <code>Net</code>, que hace referencia a la red neuronal.</p>
 </li>
 <li>
-<p><code>loss_fn</code>: ( <code>function</code> ) función de pérdida a utilizar para evaluar el modelo en cada uno de los batches.</p>
+<p><code>loss_fn</code>: ( <code>function</code> ) función de pérdida a utilizar para evaluar el modelo en cada uno de los <em>batches</em>.</p>
 </li>
 <li>
-<p>data_iterator: (<code>generator</code>) generador que produce <em>batches</em> de datos y etiquetas.</p>
+<p><code>data_iterator</code>: (<code>generator</code>) generador que produce <em>batches</em> de datos y etiquetas.</p>
 </li>
 <li>
-<p>metrics: (<code>dict</code>) diccionario que contiene como clave el nombre de la métrica y como valor la función
+<p><code>metrics</code>: (<code>dict</code>) diccionario que contiene como clave el nombre de la métrica y como valor la función
      que se usa para calcularla.</p>
 </li>
 <li>
-<p>params: (<code>Params</code>) objeto de la clase Params que contiene las propiedades del conjunto de datos.</p>
+<p><code>params</code>: (<code>Params</code>) objeto de la clase <code>Params</code> que contiene las propiedades del conjunto de datos.</p>
 </li>
 <li>
-<p>num_steps: (<code>int</code>) número de <em>batches</em> a ejecutar en el entrenamiento.</p>
-<p>Return:</p>
-</li>
-<li>
-<p><code>metrics_mean</code>: (<code>dict</code>) diccionario que contiene el valor medio para cada una de las métricas en
-     todos los <em>batches</em>.</p>
+<p><code>num_steps</code>: (<code>int</code>) número de <em>batches</em> a ejecutar en el entrenamiento.</p>
 </li>
 </ul>
+<p><strong>Return:</strong> <code>metrics_mean</code>: (<code>dict</code>) diccionario que contiene el valor medio para cada una de las métricas en
+   todos los <em>batches</em>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -177,7 +174,7 @@ Por defecto será <code>experiments/base_model</code>.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-9'>#</a>
       </div>
-      <p>Define una lista que contiene, para cada uno de los batches, un diccionario
+      <p>Define una lista que contiene, para cada uno de los <em>batches</em>, un diccionario
 con el resultado de la función de pérdida y de cada una de las métricas
 calculadas.</p>
     </div>
@@ -191,7 +188,7 @@ calculadas.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-10'>#</a>
       </div>
-      <p>Itera sobre cada uno de los <em>batches</em></p>
+      <p>Itera sobre cada uno de los <em>batches</em>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span></pre></div>
@@ -203,7 +200,7 @@ calculadas.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-11'>#</a>
       </div>
-      <p>Obtiene el siguiente <em>batch</em> de datos y de labels</p>
+      <p>Obtiene el siguiente <em>batch</em> de datos y de etiquetas.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">data_batch</span><span class="p">,</span> <span class="n">labels_batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">data_iterator</span><span class="p">)</span></pre></div>
@@ -215,7 +212,7 @@ calculadas.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-12'>#</a>
       </div>
-      <p>Dado un batch de datos, el modelo calcula la salida</p>
+      <p>Dado un <em>batch</em> de datos, el modelo calcula la salida.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">output_batch</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data_batch</span><span class="p">)</span></pre></div>
@@ -240,7 +237,7 @@ y la salida predicha por el modelo.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-14'>#</a>
       </div>
-      <p>Toma la salida predicha por el modelo, la mueve a la CPU, y la convierte en un array de NumPy</p>
+      <p>Toma la salida predicha por el modelo, la mueve a la CPU, y la convierte en un array de NumPy.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">output_batch</span> <span class="o">=</span> <span class="n">output_batch</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span></pre></div>
@@ -252,7 +249,7 @@ y la salida predicha por el modelo.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-15'>#</a>
       </div>
-      <p>Toma la salida esperada, la mueve a la CPU, y la convierte en un array de NumPy</p>
+      <p>Toma la salida esperada, la mueve a la CPU, y la convierte en un array de NumPy.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">labels_batch</span> <span class="o">=</span> <span class="n">labels_batch</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span></pre></div>
@@ -279,7 +276,7 @@ de aplicar la función de la métrica.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-17'>#</a>
       </div>
-      <p>Añade el valor de pérdida al diccionario</p>
+      <p>Añade el valor de pérdida al diccionario.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">summary_batch</span><span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span></pre></div>
@@ -291,7 +288,7 @@ de aplicar la función de la métrica.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-18'>#</a>
       </div>
-      <p>Añade el diccionario de métricas de un batch determinado a la lista</p>
+      <p>Añade el diccionario de métricas de un batch determinado a la lista.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">summ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">summary_batch</span><span class="p">)</span></pre></div>
@@ -303,7 +300,7 @@ de aplicar la función de la métrica.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-19'>#</a>
       </div>
-      <p>Crea un diccionario con el valor medio de cada de las métricas de todos los <em>batches</em></p>
+      <p>Crea un diccionario con el valor medio de cada de las métricas de todos los <em>batches</em>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">metrics_mean</span> <span class="o">=</span> <span class="p">{</span><span class="n">metric</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">summ</span><span class="p">])</span> <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">summ</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span></pre></div>
@@ -315,7 +312,7 @@ de aplicar la función de la métrica.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-20'>#</a>
       </div>
-      <p>A partir del diccionario <code>metrics_mean</code> genera un string con el valor medio de cada una
+      <p>A partir del diccionario <code>metrics_mean</code> genera un <em>string</em> con el valor medio de cada una
 de las métricas de todos los <em>batches</em> separadas por punto y coma.</p>
     </div>
     <div class='code'>
@@ -340,7 +337,7 @@ de las métricas de todos los <em>batches</em> separadas por punto y coma.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-22'>#</a>
       </div>
-      <p>Devuelve el diccionario con el valor medio de cada de las métricas</p>
+      <p>Devuelve el diccionario con el valor medio de cada de las métricas.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">return</span> <span class="n">metrics_mean</span></pre></div>
@@ -364,7 +361,7 @@ de las métricas de todos los <em>batches</em> separadas por punto y coma.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-24'>#</a>
       </div>
-      <p>Argumentos de entrada</p>
+      <p>Argumentos de entrada.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></pre></div>
@@ -400,7 +397,7 @@ de las métricas de todos los <em>batches</em> separadas por punto y coma.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-27'>#</a>
       </div>
-      <p>Se cargan los valores de la configuración del modelo como un objeto de la clase <code>Params</code></p>
+      <p>Se cargan los valores de la configuración del modelo como un objeto de la clase <code>Params</code>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">Params</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span></pre></div>
@@ -412,7 +409,7 @@ de las métricas de todos los <em>batches</em> separadas por punto y coma.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-28'>#</a>
       </div>
-      <p>Indica si el uso de la GPU esta disponible</p>
+      <p>Indica si el uso de la GPU esta disponible.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">params</span><span class="o">.</span><span class="n">cuda</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span></pre></div>
@@ -424,8 +421,8 @@ de las métricas de todos los <em>batches</em> separadas por punto y coma.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-29'>#</a>
       </div>
-      <p>Establece un valor semilla de manera <em>pseudo-aleatoria</em> para poder reproducir resultados experimentales
-con los modelos</p>
+      <p>Establece un valor semilla de manera pseudo-aleatoria para poder reproducir resultados experimentales
+con los modelos.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">230</span><span class="p">)</span>
@@ -440,7 +437,7 @@ con los modelos</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-30'>#</a>
       </div>
-      <p>Crea el archivo de <em>logs</em> en la ruta indicada como parámetro</p>
+      <p>Crea el archivo de <em>logs</em> en la ruta indicada como parámetro.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">utils</span><span class="o">.</span><span class="n">set_logger</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_dir</span><span class="p">,</span> <span class="s1">&#39;evaluate.log&#39;</span><span class="p">))</span></pre></div>
@@ -464,7 +461,7 @@ con los modelos</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-32'>#</a>
       </div>
-      <p>Crea un objeto de la clase <code>DataLoader</code> en el cual se guarda la información relativa al dataset</p>
+      <p>Crea un objeto de la clase <code>DataLoader</code> en el cual se guarda la información relativa al dataset.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></pre></div>
@@ -476,7 +473,7 @@ con los modelos</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-33'>#</a>
       </div>
-      <p>Carga los datos del directorio &lsquo;test&rsquo;</p>
+      <p>Carga los datos del directorio <code>'test'</code>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">data</span> <span class="o">=</span> <span class="n">data_loader</span><span class="o">.</span><span class="n">load_data</span><span class="p">([</span><span class="s1">&#39;test&#39;</span><span class="p">],</span> <span class="n">args</span><span class="o">.</span><span class="n">data_dir</span><span class="p">)</span></pre></div>
@@ -488,7 +485,7 @@ con los modelos</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-34'>#</a>
       </div>
-      <p>Guarda los datos de testeo seleccionados en una variable</p>
+      <p>Guarda los datos de testeo seleccionados en una variable.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">test_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span></pre></div>
@@ -500,7 +497,7 @@ con los modelos</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-35'>#</a>
       </div>
-      <p>Guarda el tamaño de los datos de testeo seleccionados como una propiedad del conjunto de datos</p>
+      <p>Guarda el tamaño de los datos de testeo seleccionados como una propiedad del conjunto de datos.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">params</span><span class="o">.</span><span class="n">test_size</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span></pre></div>
@@ -512,7 +509,7 @@ con los modelos</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-36'>#</a>
       </div>
-      <p>Crea un generador que produce <em>batches</em> de datos y etiquetas a partir de los datos de testeo</p>
+      <p>Crea un generador que produce <em>batches</em> de datos y etiquetas a partir de los datos de testeo.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">test_data_iterator</span> <span class="o">=</span> <span class="n">data_loader</span><span class="o">.</span><span class="n">data_iterator</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></pre></div>
@@ -549,7 +546,7 @@ y, en caso de que no se encuentre disponible, crea el modelo en la CPU.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-39'>#</a>
       </div>
-      <p>Obtiene la función de pérdida del modelo</p>
+      <p>Obtiene la función de pérdida del modelo.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">loss_fn</span></pre></div>
@@ -561,7 +558,7 @@ y, en caso de que no se encuentre disponible, crea el modelo en la CPU.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-40'>#</a>
       </div>
-      <p>Obtiene un diccionario con las métricas del modelo</p>
+      <p>Obtiene un diccionario con las métricas del modelo.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">metrics</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">metrics</span></pre></div>
@@ -598,7 +595,7 @@ y, en caso de que no se encuentre disponible, crea el modelo en la CPU.</p>
         <a class='octothorpe' href='#section-43'>#</a>
       </div>
       <p>Se calcula el número de <em>batches</em> a partir del tamaño del conjunto de datos de testeo y
-del tamaño de los <em>batches</em></p>
+del tamaño de los <em>batches</em>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">num_steps</span> <span class="o">=</span> <span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">test_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">params</span><span class="o">.</span><span class="n">batch_size</span></pre></div>
@@ -610,7 +607,7 @@ del tamaño de los <em>batches</em></p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-44'>#</a>
       </div>
-      <p>Evalúa el modelo y obtiene las métricas de testeo</p>
+      <p>Evalúa el modelo y obtiene las métricas de testeo.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">test_metrics</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">test_data_iterator</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span></pre></div>
@@ -634,7 +631,7 @@ del tamaño de los <em>batches</em></p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-46'>#</a>
       </div>
-      <p>Guarda en la ruta indicada anteriormente un archivo <code>json</code> con las métricas obtenidas.</p>
+      <p>Guarda en la ruta indicada anteriormente un archivo JSON con las métricas obtenidas.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">utils</span><span class="o">.</span><span class="n">save_dict_to_json</span><span class="p">(</span><span class="n">test_metrics</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>

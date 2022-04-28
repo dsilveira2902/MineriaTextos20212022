@@ -134,7 +134,7 @@ contiene los parámetros extraídos del corpus.</p>
       </div>
       <p>Distintas variables globales que se utilizarán para completar 
 los distintos archivos de vocabulario.</p>
-<p>Palabra que se utilizará como <em>padding</em></p>
+<p>Palabra que se utilizará como <em>padding</em>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="n">PAD_WORD</span> <span class="o">=</span> <span class="s1">&#39;&lt;pad&gt;&#39;</span></pre></div>
@@ -146,7 +146,7 @@ los distintos archivos de vocabulario.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-9'>#</a>
       </div>
-      <p>Etiqueta que se utilizará para las palabras de <em>padding</em></p>
+      <p>Etiqueta que se utilizará para las palabras de <em>padding</em>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="n">PAD_TAG</span> <span class="o">=</span> <span class="s1">&#39;O&#39;</span></pre></div>
@@ -185,13 +185,13 @@ los distintos archivos de vocabulario.</p>
       <p>Esta función recorre una lista de palabras extraídas del corpus
    de entrenamiento y las escribe cada una en una nueva línea de
    un archivo txt.</p>
-<p>Parámetros:</p>
+<p><strong>Parámetros:</strong></p>
 <ul>
 <li>
-<p><code>vocab</code>: (<code>list</code>) vocabulario de palabras extraídas del texto de entrenamiento</p>
+<p><code>vocab</code>: (<code>list</code>) vocabulario de palabras extraídas del texto de entrenamiento.</p>
 </li>
 <li>
-<p><code>txt_path</code>: (<code>str</code>) ruta del archivo en el que se guardan las palabras del vocabulario</p>
+<p><code>txt_path</code>: (<code>str</code>) ruta del archivo en el que se guardan las palabras del vocabulario.</p>
 </li>
 </ul>
     </div>
@@ -219,14 +219,14 @@ los distintos archivos de vocabulario.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-14'>#</a>
       </div>
-      <p>Esta función guarda la información contenida en un diccionario en un archivo JSON</p>
-<p>Parámetros:</p>
+      <p>Esta función guarda la información contenida en un diccionario en un archivo JSON.</p>
+<p><strong>Parámetros:</strong></p>
 <ul>
 <li>
-<p><code>d</code>: (<code>dict</code>) diccionario con las propiedades del conjunto de datos</p>
+<p><code>d</code>: (<code>dict</code>) diccionario con las propiedades del conjunto de datos.</p>
 </li>
 <li>
-<p><code>json_path</code>: (<code>str</code>) ruta del archivo JSON en el que se guardan los parámetros</p>
+<p><code>json_path</code>: (<code>str</code>) ruta del archivo JSON en el que se guardan los parámetros.</p>
 </li>
 </ul>
     </div>
@@ -256,20 +256,17 @@ los distintos archivos de vocabulario.</p>
       </div>
       <p>Esta función actualiza el contenido de la estructura de tipo <code>Counter</code>
    con el número de apariciones de cada elemento dentro del archivo y
-   devuelve el número total de líneas del archivo txt</p>
-<p>Parámetros:</p>
+   devuelve el número total de líneas del archivo txt.</p>
+<p><strong>Parámetros:</strong></p>
 <ul>
 <li>
-<p><code>txt_path</code>: (<code>str</code>) ruta del archivo del que se obtiene el contenido a procesar, con una frase por línea</p>
+<p><code>txt_path</code>: (<code>str</code>) ruta del archivo del que se obtiene el contenido a procesar, con una frase por línea.</p>
 </li>
 <li>
-<p><code>vocab</code>: (<code>Counter</code>) estructura que registra el número de apariciones de cada elemento</p>
-<p>Return:</p>
-</li>
-<li>
-<p><code>i</code>: (<code>int</code>) número de líneas del archivo</p>
+<p><code>vocab</code>: (<code>Counter</code>) estructura que registra el número de apariciones de cada elemento.</p>
 </li>
 </ul>
+<p><strong>Return:</strong> <code>i</code>: (<code>int</code>) número de líneas del archivo.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">txt_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span></pre></div>
@@ -282,7 +279,7 @@ los distintos archivos de vocabulario.</p>
         <a class='octothorpe' href='#section-17'>#</a>
       </div>
       <p>La función <code>enumerate()</code> genera un diccionario con num_linea-1 como clave
-y el contenido de la línea como valor</p>
+y el contenido de la línea como valor.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
@@ -323,7 +320,7 @@ y el contenido de la línea como valor</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-20'>#</a>
       </div>
-      <p>Se crea un contador de palabras vacío para el vocabulario</p>
+      <p>Se crea un contador de palabras vacío para el vocabulario.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">words</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span></pre></div>
@@ -336,7 +333,7 @@ y el contenido de la línea como valor</p>
         <a class='octothorpe' href='#section-21'>#</a>
       </div>
       <p>Se añaden las palabras al contador.
-Además se guarda en una variable el número de palabras de cada archivo consultado.</p>
+Además, se guarda en una variable el número de palabras de cada archivo consultado.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">size_train_sentences</span> <span class="o">=</span> <span class="n">update_vocab</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;train/sentences.txt&#39;</span><span class="p">),</span> <span class="n">words</span><span class="p">)</span>
@@ -353,7 +350,7 @@ Además se guarda en una variable el número de palabras de cada archivo consult
       <div class='octowrap'>
         <a class='octothorpe' href='#section-22'>#</a>
       </div>
-      <p>Se crea un contador de etiquetas vacío para el vocabulario</p>
+      <p>Se crea un contador de etiquetas vacío para el vocabulario.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">tags</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span></pre></div>
@@ -366,7 +363,7 @@ Además se guarda en una variable el número de palabras de cada archivo consult
         <a class='octothorpe' href='#section-23'>#</a>
       </div>
       <p>Se añaden las etiquetas al contador.
-Además se guarda en una variable el número de etiquetas de cada archivo consultado.</p>
+Además, se guarda en una variable el número de etiquetas de cada archivo consultado.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">size_train_tags</span> <span class="o">=</span> <span class="n">update_vocab</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;train/labels.txt&#39;</span><span class="p">),</span> <span class="n">tags</span><span class="p">)</span>
@@ -396,7 +393,7 @@ Además se guarda en una variable el número de etiquetas de cada archivo consul
       <div class='octowrap'>
         <a class='octothorpe' href='#section-25'>#</a>
       </div>
-      <p>Se crea una compresión de los contadores de palabras y etiqueta. De manera que al
+      <p>Se crea una compresión de los contadores de palabras y etiqueta. De manera que, al
    iterar a lo largo de cada uno de los contadores, solo se mantendrán en la lista 
    aquellos elementos que aparezcan un número mínimo de veces en el vocabulario. (El
    número mínimo de veces vendrá definido por los argumentos).</p>
@@ -413,7 +410,7 @@ Además se guarda en una variable el número de etiquetas de cada archivo consul
         <a class='octothorpe' href='#section-26'>#</a>
       </div>
       <p>Se añaden a la lista de palabras y de etiquetas la palabra y la etiqueta correspondiente
-  al <em>padding</em></p>
+  al <em>padding</em>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">if</span> <span class="n">PAD_WORD</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span> <span class="n">words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PAD_WORD</span><span class="p">)</span>
@@ -464,7 +461,7 @@ Además se guarda en una variable el número de etiquetas de cada archivo consul
       <div class='octowrap'>
         <a class='octothorpe' href='#section-29'>#</a>
       </div>
-      <p>Se guardan las propiedades del dataset en un archivo JSON</p>
+      <p>Se guardan las propiedades del dataset en un archivo JSON.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">save_dict_to_json</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;dataset_params.json&#39;</span><span class="p">))</span></pre></div>
@@ -476,7 +473,7 @@ Además se guarda en una variable el número de etiquetas de cada archivo consul
       <div class='octowrap'>
         <a class='octothorpe' href='#section-30'>#</a>
       </div>
-      <p>Se muestran por consola las propiedades del dataset</p>
+      <p>Se muestran por consola las propiedades del dataset.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">to_print</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;- </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sizes</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>

@@ -31,8 +31,8 @@ de la Universidad de Stanford.</p>
 <p>En este módulo se define el modelo de la red neuronal, su función de pérdida y su precisión.</p>
 <ul>
 <li>
-<p>El modelo de red neuronal define la disposición de las capas. En él se utilizan: una capa de Embeddings,
-  una capa LSTM y una capa Linear. Posteriormente, en el método forward se define el procesamiento de la
+<p>El modelo de red neuronal define la disposición de las capas. En él se utilizan: una capa de <strong>Embeddings</strong>,
+  una capa <strong>LSTM</strong> y una capa <strong>Linear</strong>. Posteriormente, en el método <code>forward</code>, se define el procesamiento de la
   información entre las capas.</p>
 </li>
 <li>
@@ -81,13 +81,10 @@ de la Universidad de Stanford.</p>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
       <p>En esta clase se define la estructura de la red neuronal, heredando la estructura proporcionada
-   por la clase nn.Module de la librería PyTorch (<code>torch.nn.Module</code>).</p>
-<p>Parámetros:</p>
-<ul>
-<li><code>nn.Module</code>: clase base que proporciona PyTorch para la creación de redes neuronales.
+   por la clase <code>nn.Module</code> de la librería PyTorch (<code>torch.nn.Module</code>).</p>
+<p><strong>Parámetros:</strong> <code>nn.Module</code>: clase base que proporciona PyTorch para la creación de redes neuronales.
    Modificando esta clase podemos crear redes neuronales propias con diferentes capas y
-   propiedades.</li>
-</ul>
+   propiedades.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -113,7 +110,7 @@ de la Universidad de Stanford.</p>
       </div>
       <p>Método constructor de la red neuronal, al cual se llama cada vez que se crea una red
    y define cada una de las capas por las que fluirá la información a través del modelo.</p>
-<p>Parámetros:</p>
+<p><strong>Parámetros:</strong></p>
 <ul>
 <li>
 <p><code>params</code>: (<code>dict</code>) diccionario en el cual se guardan:</p>
@@ -160,7 +157,7 @@ de la Universidad de Stanford.</p>
       </div>
       <p>La segunda capa emplea una red recurrente de tipo LSTM (<em>Long Short Term Memory</em>) de manera que utiliza
 los datos actuales y los del instante anterior, proyectando el embedding de tamaño <code>params.embedding_dim</code>
-en otro punto del espacio con el tamaño <code>params.lst_hidden_dim</code>.</p>
+en otro punto del espacio con el tamaño <code>params.lstm_hidden_dim</code>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span>
@@ -201,17 +198,11 @@ y genera un vector de tamaño <code>params.number_of_tags</code>.</p>
       <p>En este método se define cómo se realizará el procesamiento de los tensores de entrada en cada una de las
    capas durante el <em>paso hacia delante</em> de cada uno de los <em>batches</em>, utilizando los componentes definidos
    en el constructor.</p>
-<p>Parámetros:</p>
-<ul>
-<li><code>s</code>: (<code>Tensor</code>) contiene un conjunto de frases con dimensiones nxm, donde n hace referencia al
-   tamaño del <em>batch</em> y m es la longitud (en tokens) de la frase más larga del batch. En el caso de que
-   una frase sea más corta que m, se rellenará con tokens de tipo <code>PAD</code> hasta alcanzar esa longitud.</li>
-</ul>
-<p>Return:</p>
-<ul>
-<li><code>out</code>: (<code>Tensor</code>) tensor que indica, para cada <em>token</em> del <em>batch</em> de entrada,
-   la probabilidad de pertenecer a una de las posibles clases.</li>
-</ul>
+<p><strong>Parámetros:</strong> <code>s</code>: (<code>Tensor</code>) contiene un conjunto de frases con dimensiones <strong>nxm</strong>, donde <strong>n</strong> hace referencia al
+   tamaño del <em>batch</em> y <strong>m</strong> es la longitud (en tokens) de la frase más larga del batch. En el caso de que
+   una frase sea más corta que <strong>m</strong>, se rellenará con tokens de tipo <code>PAD</code> hasta alcanzar esa longitud.</p>
+<p><strong>Return:</strong> <code>out</code>: (<code>Tensor</code>) tensor que indica, para cada <em>token</em> del <em>batch</em> de entrada,
+   la probabilidad de pertenecer a una de las posibles clases.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -260,8 +251,8 @@ y genera un vector de tamaño <code>params.number_of_tags</code>.</p>
         <a class='octothorpe' href='#section-14'>#</a>
       </div>
       <p>Transforma los datos en una matriz de dos dimensiones (la primera dimensión la calcula automáticamente).
-s.shape[2] es lo mismo que elegir s.params.lstm_hidden_dim
-De esta forma, hemos conseguido serializar la matriz</p>
+<code>s.shape[2]</code> es lo mismo que elegir <code>s.params.lstm_hidden_dim</code>.
+De esta forma, hemos conseguido serializar la matriz.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -328,7 +319,7 @@ una de las categorías.</p>
       <p>Función que calcula la pérdida por entropía cruzada (LCE) a partir
    de los resultados proporcionados por el modelo y las etiquetas de
    los tokens.</p>
-<p>Parámetros:</p>
+<p><strong>Parámetros:</strong></p>
 <ul>
 <li>
 <p><code>outputs</code>: (<code>Tensor</code>) salida del modelo. Tensor que indica, para cada <em>token</em> del <em>batch</em> de entrada,
@@ -336,16 +327,13 @@ una de las categorías.</p>
 </li>
 <li>
 <p><code>labels</code>: (<code>Tensor</code>) contiene los distintos labels de los <em>tokens</em> del <em>batch</em> de entrada codificados
-       mediante el método Label Encoding o -1 si es un token de tipo &lsquo;PAD&rsquo;. Sus dimensiones son nxm,
-       donde n hace referencia al tamaño del <em>batch</em> y m es la cantidad de <em>tokens</em> de la frase
+       mediante el método Label Encoding o -1 si es un token de tipo <code>PAD</code>. Sus dimensiones son <strong>nxm</strong>,
+       donde <strong>n</strong> hace referencia al tamaño del <em>batch</em> y <strong>m</strong> es la cantidad de <em>tokens</em> de la frase
        más larga del <em>batch</em>.</p>
-<p>Return:</p>
-</li>
-<li>
-<p><code>loss</code>: (<code>Variable</code>) pérdida de entropía cruzada (LCE) para todos los tokens del batch excepto aquellos
-       que son de tipo &lsquo;PAD&rsquo;.</p>
 </li>
 </ul>
+<p><strong>Return:</strong> <code>loss</code>: (<code>Variable</code>) pérdida de entropía cruzada (LCE) para todos los tokens del batch excepto aquellos
+   que son de tipo <code>PAD</code>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -357,8 +345,8 @@ una de las categorías.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-20'>#</a>
       </div>
-      <p>Al pasar como parámetro el valor -1 redimensiona el tensor de labels codificado
-a un vector de una columna y n filas, siendo el número de filas asignado
+      <p>Al pasar como parámetro el valor -1, redimensiona el tensor de labels codificado
+a un vector de una columna y <strong>n</strong> filas, siendo el número de filas asignado
 automáticamente en función del número de elementos.</p>
     </div>
     <div class='code'>
@@ -371,7 +359,7 @@ automáticamente en función del número de elementos.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-21'>#</a>
       </div>
-      <p>Genera una máscara de valores de tipo float, en la cual los valores PAD tendrán asignado
+      <p>Genera una máscara de valores de tipo float, en la cual los valores <code>PAD</code> tendrán asignado
 el valor 0.0 y los demás el valor 1.0.</p>
     </div>
     <div class='code'>
@@ -384,7 +372,7 @@ el valor 0.0 y los demás el valor 1.0.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-22'>#</a>
       </div>
-      <p>Emplea la aritmética modular para convertir los valores -1 de la etiqueta PAD en valores positivos.
+      <p>Emplea la aritmética modular para convertir los valores -1 de la etiqueta <code>PAD</code> en valores positivos.
 A pesar de la modificación de estos valores, la creación de la máscara anterior hace que no afecte
 al entrenamiento de la red neuronal.</p>
     </div>
@@ -398,7 +386,7 @@ al entrenamiento de la red neuronal.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-23'>#</a>
       </div>
-      <p>Calcula el número de tokens totales que no son de tipo PAD</p>
+      <p>Calcula el número de tokens totales que no son de tipo <code>PAD</code>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">num_tokens</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">))</span></pre></div>
@@ -410,7 +398,7 @@ al entrenamiento de la red neuronal.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-24'>#</a>
       </div>
-      <p>Emplea la máscara para obviar los valores que son de tipo PAD y, mediante el sumatorio,
+      <p>Emplea la máscara para obviar los valores que son de tipo <code>PAD</code> y, mediante el sumatorio,
 calcula la entropía cruzada de los demás valores de los outputs y los divide entre el
 número total de tokens.</p>
     </div>
@@ -437,8 +425,8 @@ número total de tokens.</p>
         <a class='octothorpe' href='#section-26'>#</a>
       </div>
       <p>Calcula la precisión del modelo a partir de los valores reales y los predichos para todos los tokens
-   excepto aquellos que son de tipo PAD.</p>
-<p>Parámetros:</p>
+   excepto aquellos que son de tipo <code>PAD</code>.</p>
+<p><strong>Parámetros:</strong></p>
 <ul>
 <li>
 <p><code>outputs</code>: (<code>Tensor</code>) salida del modelo. Tensor que indica, para cada <em>token</em> del <em>batch</em> de entrada,
@@ -446,13 +434,10 @@ número total de tokens.</p>
 </li>
 <li>
 <p><code>labels</code>: (<code>Tensor</code>) contiene los distintos labels de los <em>tokens</em> del <em>batch</em> de entrada codificados
-       mediante el método Label Encoding o -1 si es un token de tipo &lsquo;PAD&rsquo;. Sus dimensiones son nxm,
-       donde n hace referencia al tamaño del <em>batch</em> y m es la cantidad de <em>tokens</em> de la frase
+       mediante el método Label Encoding o -1 si es un token de tipo <code>PAD</code>. Sus dimensiones son <strong>nxm</strong>,
+       donde <strong>n</strong> hace referencia al tamaño del <em>batch</em> y <strong>m</strong> es la cantidad de <em>tokens</em> de la frase
        más larga del <em>batch</em>.</p>
-<p>Return:</p>
-</li>
-<li>
-<p><code>accuracy</code>: (<code>Variable</code>) Devuelve el cálculo de la precisión del modelo como un número entre 0 y 1.</p>
+<p><strong>Return:</strong> <code>accuracy</code>: (<code>Variable</code>) Devuelve el cálculo de la precisión del modelo como un número entre 0 y 1.</p>
 </li>
 </ul>
     </div>
@@ -466,7 +451,7 @@ número total de tokens.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-27'>#</a>
       </div>
-      <p>Redimensiona el tensor de labels codificado a un vector de una columna y n filas,
+      <p>Redimensiona el tensor de labels codificado a un vector de una columna y <strong>n</strong> filas,
 siendo el número de filas asignado automáticamente en función del número de elementos.</p>
     </div>
     <div class='code'>
@@ -479,7 +464,7 @@ siendo el número de filas asignado automáticamente en función del número de 
       <div class='octowrap'>
         <a class='octothorpe' href='#section-28'>#</a>
       </div>
-      <p>Genera una máscara de valores de tipo booleano, en la cual los valores PAD tendrán asignado
+      <p>Genera una máscara de valores de tipo booleano, en la cual los valores <code>PAD</code> tendrán asignado
 el valor False y los demás el valor True.</p>
     </div>
     <div class='code'>
@@ -504,7 +489,7 @@ el valor False y los demás el valor True.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-30'>#</a>
       </div>
-      <p>Emplea la máscara para obviar los valores que son de tipo PAD y, mediante la división del número
+      <p>Emplea la máscara para obviar los valores que son de tipo <code>PAD</code> y, mediante la división del número
 de elementos predichos correctamente entre el número de elementos totales, calcula la precisión
 del modelo.</p>
     </div>
